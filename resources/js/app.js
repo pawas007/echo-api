@@ -1,14 +1,8 @@
 import './bootstrap';
-import { createApp, } from 'vue';
-
-
+import { createApp } from 'vue';
 import Notifications from '@kyvg/vue3-notification'
-
-const app = createApp({});
-
-import Chat from './components/Chat.vue';
-app.component('chat', Chat);
-
-
-
-app.use(Notifications).mount('#app');
+import router from "@/router/router";
+import App from './app.vue';
+const app = createApp(App);
+app.use(Notifications).use(router)
+    .mount('#app');

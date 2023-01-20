@@ -13,4 +13,13 @@ use Illuminate\Support\Facades\Broadcast;
 |
 */
 
-Broadcast::channel('public-chat', fn($user) => ['name' => $user->name, 'id' => $user->id]);
+//Broadcast::channel('public-chat', fn($user) => ['name' => $user->name, 'id' => $user->id]);
+
+
+Broadcast::channel('App.User.{id}', function ($user, $id) {
+    return (int) $user->id === (int) $id;
+});
+
+Broadcast::channel('chat', function ($user) {
+    return $user;
+});

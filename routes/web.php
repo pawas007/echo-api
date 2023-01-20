@@ -12,17 +12,23 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
-Route::get('/', function () {
-    return view('home');
-});
-
 Auth::routes();
+//Route::get('/', function () {
+//    return view('home');
+//});
 
-Route::view('chat', 'chat')->name('publicChat');
-Route::view('contacts', 'contacts')->name('contacts');
-Route::view('messages', 'messages')->name('messages');
+Route::get('/{any}', function () {
+    return view('home');
+})->where('any', '^.*$')
+    ->name('spa')
+    ->middleware('auth');
+
+
+
+
 
 Route::post('message', function (\Illuminate\Http\Request $request) {
     broadcast(new \App\Events\PublicChat($request->message));
 });
+
+

@@ -1,7 +1,7 @@
 <template>
-    <div>
+    <div class="container">
         <div class="row">
-            <h5 class="font-weight-bold mb-3 text-center text-lg-start">Chanel Members</h5>
+            <h5 class="font-weight-bold mb-3  text-lg-start">Public chat users</h5>
             <div class="col-md-6 col-lg-5 col-xl-4 mb-4 mb-md-0">
                 <div class="card">
                     <div class="card-body">
@@ -21,7 +21,7 @@
             </div>
             <div class="col-md-6 col-lg-7 col-xl-8">
                 <div class="pb-4 h6" v-if="!messages.length">No messages</div>
-                <ul class="list-unstyled">
+                <ul class="list-unstyled chat-box me-2" id="chat-box" ref="chat-window">
                     <li class="d-flex justify-content-between  mb-4" v-for="message in messages"
                         :class="{'flex-row-reverse': message.userId == currentUser.id}">
                         <img src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-6.webp" alt="avatar"
@@ -38,18 +38,22 @@
                             </div>
                         </div>
                     </li>
-                    <li class="bg-white mb-3">
-                        <div class="form-outline">
-                                    <textarea class="form-control" id="textAreaExample2" v-model="message"
-                                              rows="4"></textarea>
-                        </div>
-                    </li>
-                    <button type="button" class="btn btn-info btn-rounded float-end" @click="sendMessage">Send</button>
+
                 </ul>
+                <div class="control-box-chat">
+                    <div class="form-outline me-2">
+                                    <textarea class="form-control" id="textAreaExample2" v-model="message"
+                                              @keyup="sendTypingEvent"
+                                              rows="4"></textarea>
+                    </div>
+                    <span class="text-muted" v-if="typingUsers">{{ typingUsers.name }} is typing...</span>
+                    <button type="button" class="btn btn-primary btn-rounded float-end me-2 mt-2" id="sendButton"
+                            @click="sendMessage">Send
+                    </button>
+                </div>
             </div>
         </div>
     </div>
-    <notifications/>
 </template>
 
 <script>
@@ -62,7 +66,9 @@ export default {
             currentUser: window.authUser,
             message: '',
             messages: [],
-            users: []
+            users: [],
+            typingUsers: null,
+            typingTimer: false,
         }
     },
     computed: {
@@ -70,7 +76,7 @@ export default {
             return Echo.join('public-chat');
         }
     },
-    mounted() {
+    created() {
         this.chanel
             .here((users) => {
                 this.users = users
@@ -97,9 +103,23 @@ export default {
                     name: message.name,
                     userId: message.user_id
                 })
+                this.scrollToEnd()
+
+            })
+            .listenForWhisper('typing', (user) => {
+
+                this.typingUsers = user;
+                this.typingTimer = true
+                if (this.typingTimer)
+                    clearTimeout(this.typingTimer);
+                this.typingTimer = setTimeout(() => {
+                    this.typingUsers = null;
+                }, 3000);
+
             })
     },
     methods: {
+
         sendMessage() {
             axios.post('message', {'message': this.message}).then(() => {
                 this.messages.push({
@@ -108,13 +128,25 @@ export default {
                     userId: this.currentUser.id
                 })
                 this.message = '';
-            });
-        },
+                this.scrollToEnd()
 
+            });
+
+        },
         removeObjectWithId(arr, id) {
             const objWithIdIndex = arr.findIndex((obj) => obj.id === id);
             arr.splice(objWithIdIndex, 1);
             return arr;
+        },
+        sendTypingEvent() {
+            Echo.join('public-chat')
+                .whisper('typing', this.currentUser);
+        },
+        scrollToEnd() {
+            setTimeout(() => {
+                let chat = this.$refs["chat-window"];
+                chat.scrollTop = chat.scrollHeight + 200;
+            }, 100)
         }
     }
 }
@@ -123,6 +155,13 @@ export default {
 <style scoped>
 a {
     text-decoration: none;
+}
+
+.chat-box {
+    overflow-y: auto;
+    max-height: 400px;
+    scroll-behavior: smooth;
+
 }
 
 .profileImage {
@@ -136,5 +175,26 @@ a {
     align-items: center;
     justify-content: center;
     margin-right: 10px;
+}
+
+.chat-box::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    background-color: #F5F5F5;
+    border-radius: 10px;
+}
+
+.chat-box::-webkit-scrollbar {
+    width: 5px;
+    background-color: #F5F5F5;
+}
+
+.chat-box::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background-image: -webkit-gradient(linear,
+    left bottom,
+    left top,
+    color-stop(0.44, rgb(122, 153, 217)),
+    color-stop(0.72, rgb(73, 125, 189)),
+    color-stop(0.86, rgb(28, 58, 148)));
 }
 </style>
