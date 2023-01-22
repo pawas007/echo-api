@@ -30,7 +30,6 @@
         </div>
     </div>
 </template>
-
 <script>
 import Paginate from "vuejs-paginate-next";
 import axios from "axios";

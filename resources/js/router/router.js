@@ -16,8 +16,6 @@ const routes = [
         name: "Peoples",
         component: Peoples,
     },
-
-
     {
         path: "/public-chat",
         name: "Public chat",
@@ -28,13 +26,10 @@ const routes = [
         name: "Friends",
         component: Friends,
     },
-
-
 ];
 
 const router = createRouter({
     history: createWebHistory(),
     routes,
 });
-
 export default router;

@@ -3,7 +3,6 @@
         <Teleport to="#teleport-nav">
             <header-nav/>
         </Teleport>
-
         <div class="py-4">
             <router-view/>
         </div>
@@ -20,9 +19,3 @@ export default {
 }
 </script>
 
-<style>
-.laravel-app {
-    padding: 0 !important;
-}
-
-</style>

@@ -18,6 +18,7 @@ use App\Http\Controllers\FriendController;
 
 
 Route::middleware(['auth:sanctum'])->group(function () {
+
     Route::get('user', [UserController::class, 'auth']);
     Route::get('users', [UserController::class, 'users']);
 

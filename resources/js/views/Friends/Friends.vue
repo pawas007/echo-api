@@ -33,10 +33,8 @@
             </div>
 </template>
 <script>
-
 import MyFriends from "@/views/Friends/MyFriends.vue";
 import PendingFriends from "@/views/Friends/PendingFriends.vue";
-
 export default {
     name: "Friends",
     components: {
@@ -45,6 +43,3 @@ export default {
     },
 }
 </script>
-
-<style lang="scss">
-</style>

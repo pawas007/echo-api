@@ -36,14 +36,11 @@
         </div>
     </div>
 </template>
-
 <script>
 import axios from "axios";
 import Paginate from "vuejs-paginate-next";
-
 export default {
     name: "Peoples",
-
     components: {
         Paginate
     },
@@ -61,7 +58,6 @@ export default {
     },
     mounted() {
         this.userslist()
-
     },
     methods: {
         addFriend(id) {
@@ -74,10 +70,8 @@ export default {
                         text: r.data.name,
                     })
             });
-        },
-
-        async userslist(page = 1) {
-            await axios.get(`users?page=${page}`).then(({data}) => {
+        }, userslist(page = 1) {
+             axios.get(`users?page=${page}`).then(({data}) => {
                 this.users = data.data
                 this.paginator.pageCount = data.last_page
             }).catch(({response}) => {
@@ -85,13 +79,6 @@ export default {
             })
         }
     },
-
-
 }
-
-
 </script>
 
-<style scoped>
-
-</style>

@@ -16,13 +16,9 @@
         </ul>
     </div>
 </template>
-
 <script>
 export default {
     name: "Header-nav"
 }
 </script>
 
-<style scoped>
-
-</style>
