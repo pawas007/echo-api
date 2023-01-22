@@ -4,9 +4,11 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+
 
 class User extends Authenticatable
 {
@@ -17,6 +19,7 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
+    protected $guarded = ['id'];
     protected $fillable = [
         'name',
         'email',
@@ -41,4 +44,48 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    /**
+     * @return BelongsToMany
+     */
+    public function friends(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'friends', 'user_id', 'friend_id')->withTimestamps();
+    }
+
+    /**
+     * @return BelongsToMany
+     */
+    public function friendPendingRequest(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'friend_pendings', 'user_id', 'friend_id')->withTimestamps();
+    }
+
+    /**
+     * @param $user
+     * @return void
+     */
+    public function friendAdd($user): void
+    {
+        $this->friendPendingRequest()->attach($user->id);
+    }
+
+    /**
+     * @param $user
+     * @return void
+     */
+    public function friendDelete($user): void
+    {
+        $this->friends()->detach($user->id);
+    }
+    /**
+     * @param User $user
+     * @return void
+     */
+    public function pendingCancel(User $user)
+    {
+        $this->friendPendingRequest()->detach($user->id);
+    }
+
+
 }

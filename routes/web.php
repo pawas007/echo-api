@@ -27,8 +27,5 @@ Route::get('/{any}', function () {
 
 
 
-Route::post('message', function (\Illuminate\Http\Request $request) {
-    broadcast(new \App\Events\PublicChat($request->message));
-});
 
 

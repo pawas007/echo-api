@@ -38,7 +38,6 @@
                             </div>
                         </div>
                     </li>
-
                 </ul>
                 <div class="control-box-chat">
                     <div class="form-outline me-2">
@@ -55,15 +54,13 @@
         </div>
     </div>
 </template>
-
 <script>
 import axios from "axios";
-
 export default {
     name: "Chat",
     data() {
         return {
-            currentUser: window.authUser,
+            currentUser: null,
             message: '',
             messages: [],
             users: [],
@@ -77,6 +74,9 @@ export default {
         }
     },
     created() {
+        axios.get('user').then((r) => {
+            this.currentUser = r.data
+        });
         this.chanel
             .here((users) => {
                 this.users = users
@@ -119,9 +119,8 @@ export default {
             })
     },
     methods: {
-
         sendMessage() {
-            axios.post('message', {'message': this.message}).then(() => {
+            axios.post('public-chat/message', {'message': this.message}).then(() => {
                 this.messages.push({
                     myMessage: this.message,
                     name: this.currentUser.name,
