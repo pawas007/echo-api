@@ -56,7 +56,7 @@
 </template>
 <script>
 import axios from "axios";
-import {ref, computed, onMounted, onUnmounted, onBeforeUnmount} from "vue";
+import {ref, computed, onMounted, onBeforeUnmount} from "vue";
 import {notify} from "@kyvg/vue3-notification";
 import {useI18n} from "vue-i18n";
 
@@ -72,7 +72,10 @@ export default {
         const typingUsers = ref(null);
         const typingTimer = ref(null);
         const chatWindow = ref(null);
-        let chanel = Echo.join('publicChat')
+        const chanel = Echo.join('publicChat')
+
+
+
         const removeObjectWithId = (arr, id) => {
             const objWithIdIndex = arr.findIndex((obj) => obj.id === id);
             arr.splice(objWithIdIndex, 1);
@@ -101,10 +104,12 @@ export default {
             });
         }
         onMounted(() => {
+
                 axios.get('user').then((r) => {
                     console.log(r.data)
                     currentUser.value = r.data
                 });
+
                 chanel
                     .here((usersOnline) => {
                         users.value = usersOnline
@@ -141,7 +146,6 @@ export default {
                         typingTimer.value = setTimeout(() => {
                             typingUsers.value = null;
                         }, 3000);
-
                     })
             },
         )
