@@ -1,9 +1,9 @@
 <template>
     <div>
-        <div class="mt-5" v-if="!friends.length">
-            <h5 class="h5">No Friend</h5>
+        <div class="mt-5" v-if="!pendingFriendRequests.length">
+            <h5 class="h5">{{ $t("There are pending requests") }}</h5>
         </div>
-        <div class="row border-bottom mb-2 py-2" v-for="user in friends">
+        <div class="row border-bottom mb-2 py-2" v-for="user in pendingFriendRequests">
             <div class="col-md-2 col-sm-2">
                 <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="user"
                      class="profile-photo-lg">
@@ -13,33 +13,29 @@
                 <p>{{ user.email }}</p>
             </div>
             <div class="col align-self-center d-flex justify-content-end">
-                <button class="btn btn-primary pull-right" @click="removeFriend(user.id)">Remove Friend
-                </button>
+                <button class="btn btn-secondary pull-right" @click="removeRequest(user.id)">{{ $t("Cansel request") }}</button>
             </div>
         </div>
         <div class="mt-3 d-flex justify-content-center" v-if="paginator.pageCount > 1">
             <paginate
-                v-model="paginator.currentPage"
                 :page-count="paginator.pageCount"
                 :page-range="3"
                 :margin-pages="1"
-                :click-handler="friendslist"
-                :prev-text="'Prev'"
-                :next-text="'Next'"
+                :click-handler="pendingList"
+                prev-text="<"
+                next-text=">"
                 :container-class="'pagination'"
-                :page-class="'page-item'"
-            >
+                :page-class="'page-item'">
             </paginate>
         </div>
     </div>
 </template>
-
 <script>
 import Paginate from "vuejs-paginate-next";
 import axios from "axios";
 
 export default {
-    name: "MyFriends",
+    name: "PendingFriends",
     components: {
         Paginate
     },
@@ -49,27 +45,27 @@ export default {
                 currentPage: 1,
                 pageCount: 0,
             },
-            friends: {
+            pendingFriendRequests: {
                 type: Array,
                 default: []
             }
         }
     },
     mounted() {
-        this.friendslist()
+        this.pendingList()
     },
     methods: {
-        async friendslist(page = 1) {
-            await axios.get(`friend?page=${page}`).then(({data}) => {
-                this.friends = data.data
+        pendingList(page = 1) {
+            axios.get(`friend/pending?page=${page}`).then(({data}) => {
+                this.pendingFriendRequests = data.data
                 this.paginator.pageCount = data.last_page
             }).catch(({response}) => {
                 console.error(response)
             })
         },
-        removeFriend(user) {
-            axios.get(`friend/${user}/delete`).then(({data}) => {
-                this.friendslist( this.paginator.currentPage)
+        removeRequest(user) {
+            axios.get(`friend/pending/${user}/cansel`).then((req) => {
+                this.pendingList(this.paginator.currentPage)
             }).catch(({response}) => {
                 console.error(response)
             })
@@ -78,6 +74,8 @@ export default {
 }
 </script>
 
-<style scoped>
 
-</style>
+<!--MAKE NOTIFICATION-->
+<!--SHOW FRIEND TO CONNECT LIST-->
+<!--save public massages-->
+

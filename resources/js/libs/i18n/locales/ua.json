@@ -1,0 +1,27 @@
+{
+    "nav": {
+        "Home": "Головна",
+        "Peoples": "Користувачі",
+        "Public chat": "Публічний чат",
+        "Friends": "Друзі"
+    },
+    "Online users": "Присутні користувачі",
+    "No messages": "Немає повідомлень",
+    "is typing": "Друкує",
+    "Send": "Відправити",
+    "Add friend": "Додати друга",
+    "No friend": "Друзів нумає",
+    "Remove friend": "Видалити друга",
+    "There are pending requests": "Немає відправлених запитів",
+    "Cansel request": "Відмінити запит",
+    "There are no friends waiting for confirmation": "Немає друзів для підтвердження",
+    "Accept": "Приняти",
+    "Decline": "Відхилити",
+    "Request": "Запити",
+    "Friends": "Друзі",
+    "Pending request": "Відправлені запити",
+    "Peoples": "Користувачі",
+    "Friend request sent": "Запрос на добавлення в друзі відправлено"
+
+
+}

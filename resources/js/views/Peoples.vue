@@ -2,7 +2,7 @@
     <div class="container">
         <div class="row">
             <div class="col-md-8">
-                <h3 class="h3 border-bottom pb-3">Peoples</h3>
+                <h3 class="h3 border-bottom pb-3">{{ $t("Peoples") }}</h3>
                 <div class="row border-bottom mb-2 py-2 " v-for="user in users">
                     <div class="col-md-2 col-sm-2">
                         <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="user"
@@ -14,7 +14,7 @@
                         <!--                                <p class="text-muted">500m away</p>-->
                     </div>
                     <div class="col align-self-center d-flex justify-content-end">
-                        <button class="btn btn-primary pull-right" @click="addFriend(user.id)">Add Friend
+                        <button class="btn btn-primary pull-right" @click="addFriend(user.id)"> {{ $t("Add friend") }}
                         </button>
                     </div>
                 </div>
@@ -24,9 +24,9 @@
                         :page-count="paginator.pageCount"
                         :page-range="3"
                         :margin-pages="1"
-                        :click-handler="userslist"
-                        :prev-text="'Prev'"
-                        :next-text="'Next'"
+                        :click-handler="usersList"
+                        prev-text="<"
+                        next-text=">"
                         :container-class="'pagination'"
                         :page-class="'page-item'"
                     >
@@ -39,45 +39,47 @@
 <script>
 import axios from "axios";
 import Paginate from "vuejs-paginate-next";
+import {useI18n} from "vue-i18n";
+import {onBeforeMount, ref, reactive} from "vue";
+import {notify} from "@kyvg/vue3-notification";
+
 export default {
     name: "Peoples",
     components: {
         Paginate
     },
-    data() {
-        return {
-            paginator: {
-                currentPage: 1,
-                pageCount: 0,
-            },
-            users: {
-                type: Array,
-                default: []
-            }
-        }
-    },
-    mounted() {
-        this.userslist()
-    },
-    methods: {
-        addFriend(id) {
-            axios.get(`friend/${id}/add`).then((r) => {
+    setup() {
+        const {t} = useI18n();
+        const users = ref([]);
+        const paginator = reactive({
+            currentPage: 1,
+            pageCount: 0,
+        })
 
-                if (r.status == 203)
-                    this.$notify({
+        onBeforeMount(() => {
+            usersList()
+        })
+
+        const addFriend = (id) => {
+            axios.get(`friend/${id}/add`).then((r) => {
+                if (r.status === 201)
+                    notify({
                         type: 'success',
-                        title: "Send friend request",
+                        title: t('Friend request sent'),
                         text: r.data.name,
                     })
             });
-        }, userslist(page = 1) {
-             axios.get(`users?page=${page}`).then(({data}) => {
-                this.users = data.data
-                this.paginator.pageCount = data.last_page
+        }
+        const usersList = (page = 1) => {
+            axios.get(`users?page=${page}`).then(({data}) => {
+                users.value = data.data
+                paginator.pageCount = data.last_page
             }).catch(({response}) => {
                 console.error(response)
             })
         }
+
+        return {addFriend, usersList, paginator, users}
     },
 }
 </script>

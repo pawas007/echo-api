@@ -1,7 +1,13 @@
 <template>
     <div>
+        <Teleport to="#notificationsList">
+        <push-notifications/>
+        </Teleport>
         <Teleport to="#teleport-nav">
             <header-nav/>
+        </Teleport>
+        <Teleport to="#locale">
+            <Locale/>
         </Teleport>
         <div class="py-4">
             <router-view/>
@@ -10,12 +16,13 @@
     </div>
 </template>
 <script>
-import Chat from "@/views/PublicChat.vue";
-import HeaderNav from "@/components/Header-nav.vue";
+import HeaderNav from "@/components/Header/Header-nav.vue";
+import Locale from "@/components/Header/Locale.vue";
+import PushNotifications from "@/components/Header/PushNotifications.vue";
 
 export default {
     name: "app",
-    components: {HeaderNav, Chat}
+    components: {PushNotifications, Locale, HeaderNav}
 }
 </script>
 

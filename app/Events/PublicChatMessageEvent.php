@@ -11,7 +11,7 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Auth;
 
-class PublicChat implements ShouldBroadcast
+class PublicChatMessageEvent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -32,9 +32,9 @@ class PublicChat implements ShouldBroadcast
     /**
      * Get the channels the event should broadcast on.
      *
-     * @return \Illuminate\Broadcasting\Channel|array
+     * @return Channel|PresenceChannel
      */
-    public function broadcastOn()
+    public function broadcastOn(): Channel|PresenceChannel
     {
         return new PresenceChannel('public-chat');
     }
@@ -44,7 +44,7 @@ class PublicChat implements ShouldBroadcast
      *
      * @return array
      */
-    public function broadcastWith()
+    public function broadcastWith(): array
     {
         return ['user_id' => Auth::user()->id,'message'=>$this->message,'name'=> Auth::user()->name];
     }

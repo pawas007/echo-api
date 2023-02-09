@@ -36,19 +36,6 @@ class FriendController extends Controller
      * @param User $user
      * @return JsonResponse
      */
-    public function friendAdd(User $user): JsonResponse
-    {
-        if (Auth::user()->friendPendingRequest->contains($user)) {
-            return Response::json(['message' => 'Friend request already isset']);
-        }
-        Auth::user()->friendAdd($user);
-        return Response::json(['name' => $user->name], 203);
-    }
-
-    /**
-     * @param User $user
-     * @return JsonResponse
-     */
     public function friendPendingCansel(User $user): JsonResponse
     {
         if (!Auth::user()->friendPendingRequest->contains($user)) {
@@ -57,6 +44,50 @@ class FriendController extends Controller
         Auth::user()->pendingCancel($user);
         return Response::json([], 204);
     }
+
+    /**
+     * @return JsonResponse
+     */
+    public function friendRequest(): JsonResponse
+    {
+        return Response::json(Auth::user()->friendRequest()->paginate(10));
+    }
+
+    /**
+     * @return JsonResponse
+     */
+    public function friendAccept(User $user)
+    {
+        Auth::user()->friendAccept($user);
+        return Response::json(['name' => $user->name]);
+    }
+
+    /**
+     * @return JsonResponse
+     */
+    public function friendDecline(User $user)
+    {
+        Auth::user()->friendDecline($user);
+        return Response::json(['name' => $user->name],204);
+    }
+
+
+    /**
+     * @param User $user
+     * @return JsonResponse
+     */
+    public function friendAdd(User $user): JsonResponse
+    {
+        if (Auth::user()->friendPendingRequest->contains($user)) {
+            return Response::json(['message' => 'Friend request already isset']);
+        }
+        if (Auth::user()->friends->contains($user)) {
+            return Response::json(['message' => 'Friend request already added']);
+        }
+        Auth::user()->friendAdd($user);
+        return Response::json(['name' => $user->name], 201);
+    }
+
 
     /**
      * @param User $user
@@ -68,5 +99,16 @@ class FriendController extends Controller
         return Response::json([], 204);
     }
 
+    /**
+     * @return JsonResponse
+     */
+    public function friendCounts(): JsonResponse
+    {
+
+        return Response::json([
+            'friends'=>2,
+            ''
+        ], 204);
+    }
 
 }

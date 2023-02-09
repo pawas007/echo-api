@@ -3,43 +3,66 @@
         <div class="row">
             <div class="col-md-8">
                 <div class="row">
-                            <h3 class="h3 border-bottom pb-3">Friends</h3>
-                            <ul class="nav nav-tabs" id="myTab" role="tablist">
-                                <li class="nav-item" role="presentation">
-                                    <button class="nav-link active" id="my-friend-tab" data-bs-toggle="tab"
-                                            data-bs-target="#my-friend" type="button" role="tab"
-                                            aria-controls="my-friend" aria-selected="true">My Friends
-                                    </button>
-                                </li>
-                                <li class="nav-item" role="presentation">
-                                    <button class="nav-link" id="pending-tab" data-bs-toggle="tab"
-                                            data-bs-target="#pending" type="button" role="tab" aria-controls="pending"
-                                            aria-selected="false">Pending
-                                    </button>
-                                </li>
-                            </ul>
-                            <div class="tab-content" id="myTabContent">
-                                <div class="tab-pane fade show active" id="my-friend" role="tabpanel"
-                                     aria-labelledby="my-friend-tab">
-                                    <MyFriends/>
-                                </div>
-                                <div class="tab-pane fade" id="pending" role="tabpanel" aria-labelledby="pending-tab">
-                                    <PendingFriends/>
-                                </div>
-                            </div>
-                        </div>
+                    <h3 class="h3 border-bottom pb-3">{{ $t("Friends") }}</h3>
+                    <div class="btn-group mb-3" role="group">
+                        <button type="button" class="btn btn-secondary" @click="activeTab='MyFriends'"
+                                :class="{'active':activeTab === 'MyFriends' }">{{ $t("Friends") }}
+                            <span class="badge badge-light ms-1"
+                                  style="background: dimgrey;"> {{ friendsCount.friends }} </span>
+                        </button>
+                        <button type="button" class="btn btn-secondary" @click="activeTab='PendingFriends'"
+                                :class="{'active':activeTab === 'PendingFriends' }">{{ $t("Pending request") }}
+                            <span class="badge badge-light  ms-1"
+                                  style="background: dimgrey;">{{ friendsCount.pending }}</span>
+                        </button>
+                        <button type="button" class="btn btn-secondary" @click="activeTab='RequestFriends'"
+                                :class="{'active':activeTab === 'RequestFriends' }"> {{ $t("Request") }}
+                            <span class="badge badge-light  ms-1"
+                                  style="background: dimgrey;">{{ friendsCount.request }}</span>
+                        </button>
+                    </div>
+                    <div class="tab-content">
+                        <component :is="activeTab"/>
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
 </template>
 <script>
-import MyFriends from "@/views/Friends/MyFriends.vue";
-import PendingFriends from "@/views/Friends/PendingFriends.vue";
+import MyFriends from "@/components/Friends/MyFriends.vue";
+import PendingFriends from "@/components/Friends/PendingFriends.vue";
+import RequestFriends from "@/components/Friends/RequestFriends.vue";
+import {onMounted, reactive, ref} from "vue";
+import axios from "axios";
+
 export default {
     name: "Friends",
     components: {
+        RequestFriends,
         PendingFriends,
         MyFriends,
+    },
+    setup() {
+
+        const activeTab = ref("MyFriends")
+        const friendsCount = reactive({
+            friends: null,
+            pending: null,
+            request: null
+        })
+
+        onMounted(() => {
+            Echo.channel('friends').listen('FriendsCountUpdateEvent', (counts) => {
+                const {friends, pending, request} = counts;
+                friendsCount.friends = friends
+                friendsCount.pending = pending
+                friendsCount.request = request
+
+            })
+            axios.get('friend/count/refresh')
+        })
+        return {friendsCount, activeTab}
     },
 }
 </script>

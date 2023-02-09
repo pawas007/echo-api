@@ -34,9 +34,10 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <div id="teleport-nav"></div>
-                <!-- Right Side Of Navbar -->
-                <ul class="navbar-nav ms-auto">
+                <div id="teleport-nav" class="me-auto"></div>
+                <div id="notificationsList"></div>
+                <div id="locale"></div>
+                <ul class="navbar-nav ">
                     <!-- Authentication Links -->
                     @guest
                         @if (Route::has('login'))
@@ -52,8 +53,8 @@
                         @endif
                     @else
                         <li class="nav-item dropdown">
-                            <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"
-                               data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                            <a id="navbarDropdown" class="nav-link dropdown-toggle" role="button"
+                               data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 {{ Auth::user()->name }}
                             </a>
 

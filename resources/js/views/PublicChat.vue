@@ -1,7 +1,7 @@
 <template>
     <div class="container">
         <div class="row">
-            <h5 class="font-weight-bold mb-3  text-lg-start">Public chat users</h5>
+            <h5 class="font-weight-bold mb-3  text-lg-start">{{ $t("Online users") }}</h5>
             <div class="col-md-6 col-lg-5 col-xl-4 mb-4 mb-md-0">
                 <div class="card">
                     <div class="card-body">
@@ -20,7 +20,7 @@
                 </div>
             </div>
             <div class="col-md-6 col-lg-7 col-xl-8">
-                <div class="pb-4 h6" v-if="!messages.length">No messages</div>
+                <div class="pb-4 h6" v-if="!messages.length">{{ $t("No messages") }}</div>
                 <ul class="list-unstyled chat-box me-2" id="chat-box" ref="chat-window">
                     <li class="d-flex justify-content-between  mb-4" v-for="message in messages"
                         :class="{'flex-row-reverse': message.userId == currentUser.id}">
@@ -45,9 +45,9 @@
                                               @keyup="sendTypingEvent"
                                               rows="4"></textarea>
                     </div>
-                    <span class="text-muted" v-if="typingUsers">{{ typingUsers.name }} is typing...</span>
-                    <button type="button" class="btn btn-primary btn-rounded float-end me-2 mt-2" id="sendButton"
-                            @click="sendMessage">Send
+                    <span class="text-muted" v-if="typingUsers">{{ typingUsers.name }} {{ $t("No messages") }}...</span>
+                    <button type="button" class="btn btn-secondary btn-rounded float-end me-2 mt-2" id="sendButton"
+                            @click="sendMessage">{{ $t("Send") }}
                     </button>
                 </div>
             </div>
@@ -97,7 +97,7 @@ export default {
                     text: user.name,
                 })
             })
-            .listen('PublicChat', (message) => {
+            .listen('PublicChatMessageEvent', (message) => {
                 this.messages.push({
                     myMessage: message.message,
                     name: message.name,

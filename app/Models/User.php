@@ -61,12 +61,21 @@ class User extends Authenticatable
     }
 
     /**
+     * @return BelongsToMany
+     */
+    public function friendRequest(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'friend_pendings', 'friend_id', 'user_id')->withTimestamps();
+    }
+
+    /**
      * @param $user
      * @return void
      */
     public function friendAdd($user): void
     {
         $this->friendPendingRequest()->attach($user->id);
+        broadcast(new \App\Events\FriendsCountUpdateEvent());
     }
 
     /**
@@ -76,14 +85,38 @@ class User extends Authenticatable
     public function friendDelete($user): void
     {
         $this->friends()->detach($user->id);
+        broadcast(new \App\Events\FriendsCountUpdateEvent());
     }
+
+    /**
+     * @param $user
+     * @return void
+     */
+    public function friendAccept($user): void
+    {
+        $this->friendRequest()->detach($user->id);
+        $this->friends()->attach($user->id);
+        broadcast(new \App\Events\FriendsCountUpdateEvent());
+    }
+
+    /**
+     * @param $user
+     * @return void
+     */
+    public function friendDecline($user): void
+    {
+        $this->friendRequest()->detach($user->id);
+        broadcast(new \App\Events\FriendsCountUpdateEvent());
+    }
+
     /**
      * @param User $user
      * @return void
      */
-    public function pendingCancel(User $user)
+    public function pendingCancel(User $user): void
     {
         $this->friendPendingRequest()->detach($user->id);
+        broadcast(new \App\Events\FriendsCountUpdateEvent());
     }
 
 

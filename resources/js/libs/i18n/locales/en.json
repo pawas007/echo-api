@@ -1,0 +1,26 @@
+{
+    "nav": {
+        "Home": "Home",
+        "Peoples": "Users",
+        "Public chat": "Public chat",
+        "Friends": "Friends"
+    },
+    "Online users": "Online users",
+    "No messages": "No messages",
+    "is typing": "is typing",
+    "Send": "Send",
+    "Add friend": "Add friend",
+    "No friend": "No friend",
+    "Remove friend": "Remove friend",
+    "There are pending requests": "There are pending requests",
+    "Cansel request": "Cansel request",
+    "There are no friends waiting for confirmation": "There are no friends waiting for confirmation",
+    "Accept": "Accept",
+    "Decline": "Decline",
+    "Request": "Request",
+    "Friends": "Friends",
+    "Pending request": "Pending request",
+    "Peoples": "Peoples",
+    "Friend request sent": "Friend request send"
+
+}
