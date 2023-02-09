@@ -7,10 +7,10 @@
     },
     "Online users": "Присутні користувачі",
     "No messages": "Немає повідомлень",
-    "is typing": "Друкує",
+    "is typing": "пише повідомлення",
     "Send": "Відправити",
     "Add friend": "Додати друга",
-    "No friend": "Друзів нумає",
+    "No friend": "Друзів немає",
     "Remove friend": "Видалити друга",
     "There are pending requests": "Немає відправлених запитів",
     "Cansel request": "Відмінити запит",
@@ -21,7 +21,9 @@
     "Friends": "Друзі",
     "Pending request": "Відправлені запити",
     "Peoples": "Користувачі",
-    "Friend request sent": "Запрос на добавлення в друзі відправлено"
+    "Friend request sent": "Запрос на добавлення в друзі відправлено",
+    "Left chat": "Покинув чат",
+    "Join to chat":"Приєднався до чату"
 
 
 }

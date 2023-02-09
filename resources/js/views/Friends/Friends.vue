@@ -51,16 +51,6 @@ export default {
             pending: null,
             request: null
         })
-
-        const friendsCountUpdateSubscribe = () => {
-            axios.get('user').then((r) => {
-                Echo.private('friendsListUpdate').listen('FriendsCountUpdateEvent', (r) => {
-                    console.log(r)
-                    getFriendCounts()
-                })
-            })
-        }
-
         const getFriendCounts = () => {
             axios.get('friend/counts').then((r) => {
                 const {friends, pending, request} = r.data;
@@ -72,7 +62,6 @@ export default {
 
         onMounted(() => {
             getFriendCounts()
-            friendsCountUpdateSubscribe()
         })
         return {friendsCount, activeTab}
     },

@@ -37,47 +37,44 @@
 <script>
 import Paginate from "vuejs-paginate-next";
 import axios from "axios";
+import {onBeforeMount, reactive, ref} from "vue";
 
 export default {
     name: "MyFriends",
     components: {
         Paginate
     },
-    data() {
-        return {
-            paginator: {
-                currentPage: 1,
-                pageCount: 0,
-            },
-            friends: {
-                type: Array,
-                default: []
-            }
+    setup() {
+        const friends = ref([])
+        const paginator = reactive({
+            currentPage: 1,
+            pageCount: 0,
+        })
+
+        const removeFriend = (user) => {
+            axios.get(`friend/${user}/delete`).then(() => {
+                friendslist(paginator.currentPage)
+            }).catch(({response}) => {
+                console.error(response)
+            })
         }
-    },
-    mounted() {
-        this.friendslist()
-    },
-    methods: {
-        async friendslist(page = 1) {
+
+        const friendslist = async (page = 1) => {
             await axios.get(`friend?page=${page}`).then(({data}) => {
-                this.friends = data.data
-                this.paginator.pageCount = data.last_page
-            }).catch(({response}) => {
-                console.error(response)
-            })
-        },
-        removeFriend(user) {
-            axios.get(`friend/${user}/delete`).then(({data}) => {
-                this.friendslist(this.paginator.currentPage)
+                friends.value = data.data
+                paginator.pageCount = data.last_page
             }).catch(({response}) => {
                 console.error(response)
             })
         }
-    }
+        onBeforeMount(() => {
+            friendslist()
+        })
+
+        return {friendslist, removeFriend,friends,paginator}
+
+    },
+
 }
 </script>
 
-<style scoped>
-
-</style>

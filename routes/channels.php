@@ -20,7 +20,3 @@ Broadcast::channel('App.User.{id}', function ($user, $id) {
 Broadcast::channel('publicChat', function ($user) {
     return $user;
 });
-
-Broadcast::channel('friendsListUpdate', function ($user) {
-    return true;
-});

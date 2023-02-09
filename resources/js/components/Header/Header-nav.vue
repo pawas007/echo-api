@@ -19,7 +19,6 @@
 <script>
 export default {
     name: "Header-nav",
-
 }
 </script>
 

@@ -14,24 +14,3 @@ export default {
 }
 </script>
 
-<style scoped>
-.alert-button {
-    outline: none;
-    border: navajowhite;
-    background: none;
-    border-radius: 50%;
-    background: #5c636a;
-    width: 41px;
-    height: 41px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.custom-badge {
-    position: absolute;
-    top: -5px;
-    left: 25px;
-    background-color: mediumseagreen;
-}
-</style>

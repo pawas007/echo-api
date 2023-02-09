@@ -8,12 +8,12 @@
                         <ul class="list-unstyled mb-0">
                             <li class="p-2 " v-for="(user, index) in users" :key="index"
                                 :class="{ 'border-bottom': index !== users.length -1 }">
-                                <a href="#!" class="d-flex justify-content-between">
+                                <div class="d-flex justify-content-between">
                                     <div class="d-flex flex-row align-items-center">
                                         <div class="profileImage"> {{ user.name.charAt(0) }}</div>
                                         <p class="fw-bold pl-2 m-0">{{ user.name }}</p>
                                     </div>
-                                </a>
+                                </div>
                             </li>
                         </ul>
                     </div>
@@ -21,7 +21,7 @@
             </div>
             <div class="col-md-6 col-lg-7 col-xl-8">
                 <div class="pb-4 h6" v-if="!messages.length">{{ $t("No messages") }}</div>
-                <ul class="list-unstyled chat-box me-2" id="chat-box" ref="chat-window">
+                <ul class="list-unstyled chat-box me-2" id="chat-box" ref="chatWindow">
                     <li class="d-flex justify-content-between  mb-4" v-for="message in messages"
                         :class="{'flex-row-reverse': message.userId == currentUser.id}">
                         <img src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-6.webp" alt="avatar"
@@ -45,7 +45,7 @@
                                               @keyup="sendTypingEvent"
                                               rows="4"></textarea>
                     </div>
-                    <span class="text-muted" v-if="typingUsers">{{ typingUsers.name }} {{ $t("No messages") }}...</span>
+                    <span class="text-muted" v-if="typingUsers">{{ typingUsers.name }} {{ $t("is typing") }}...</span>
                     <button type="button" class="btn btn-secondary btn-rounded float-end me-2 mt-2" id="sendButton"
                             @click="sendMessage">{{ $t("Send") }}
                     </button>
@@ -56,144 +56,111 @@
 </template>
 <script>
 import axios from "axios";
+import {ref, computed, onMounted, onUnmounted, onBeforeUnmount} from "vue";
+import {notify} from "@kyvg/vue3-notification";
+import {useI18n} from "vue-i18n";
+
 export default {
     name: "Chat",
-    data() {
-        return {
-            currentUser: null,
-            message: '',
-            messages: [],
-            users: [],
-            typingUsers: null,
-            typingTimer: false,
-        }
-    },
-    computed: {
-        chanel() {
-            return Echo.join('publicChat');
-        }
-    },
-    created() {
-        axios.get('user').then((r) => {
-            this.currentUser = r.data
-        });
-        this.chanel
-            .here((users) => {
-                this.users = users
-            })
-            .joining((user) => {
-                this.users.push(user)
-                this.$notify({
-                    type: 'success',
-                    title: "Join to chat",
-                    text: user.name,
-                })
-            })
-            .leaving((user) => {
-                this.removeObjectWithId(this.users, user.id)
-                this.$notify({
-                    type: 'warn',
-                    title: "Left chat",
-                    text: user.name,
-                })
-            })
-            .listen('PublicChatMessageEvent', (message) => {
-                this.messages.push({
-                    myMessage: message.message,
-                    name: message.name,
-                    userId: message.user_id
-                })
-                this.scrollToEnd()
 
-            })
-            .listenForWhisper('typing', (user) => {
-
-                this.typingUsers = user;
-                this.typingTimer = true
-                if (this.typingTimer)
-                    clearTimeout(this.typingTimer);
-                this.typingTimer = setTimeout(() => {
-                    this.typingUsers = null;
-                }, 3000);
-
-            })
-    },
-    methods: {
-        sendMessage() {
-            axios.post('public-chat/message', {'message': this.message}).then(() => {
-                this.messages.push({
-                    myMessage: this.message,
-                    name: this.currentUser.name,
-                    userId: this.currentUser.id
-                })
-                this.message = '';
-                this.scrollToEnd()
-
-            });
-
-        },
-        removeObjectWithId(arr, id) {
+    setup() {
+        const {t} = useI18n();
+        const currentUser = ref(null);
+        const message = ref('');
+        const messages = ref([]);
+        const users = ref([]);
+        const typingUsers = ref(null);
+        const typingTimer = ref(null);
+        const chatWindow = ref(null);
+        let chanel = Echo.join('publicChat')
+        const removeObjectWithId = (arr, id) => {
             const objWithIdIndex = arr.findIndex((obj) => obj.id === id);
             arr.splice(objWithIdIndex, 1);
             return arr;
-        },
-        sendTypingEvent() {
-            Echo.join('public-chat')
-                .whisper('typing', this.currentUser);
-        },
-        scrollToEnd() {
+        }
+        const sendTypingEvent = () => {
+            return Echo.join('publicChat')
+                .whisper('typing', currentUser.value);
+        }
+        const scrollToEnd = () => {
             setTimeout(() => {
-                let chat = this.$refs["chat-window"];
+                let chat = chatWindow.value;
                 chat.scrollTop = chat.scrollHeight + 200;
             }, 100)
+        }
+        const sendMessage = () => {
+            axios.post('public-chat/message', {'message': message.value}).then(() => {
+                messages.value.push({
+                    myMessage: message.value,
+                    name: currentUser.value.name,
+                    userId: currentUser.id
+                })
+                message.value = '';
+                scrollToEnd()
+
+            });
+        }
+        onMounted(() => {
+                axios.get('user').then((r) => {
+                    console.log(r.data)
+                    currentUser.value = r.data
+                });
+                chanel
+                    .here((usersOnline) => {
+                        users.value = usersOnline
+                    })
+                    .joining((user) => {
+                        users.value.push(user)
+                        notify({
+                            type: 'success',
+                            title: t("Join to chat"),
+                            text: user.name,
+                        })
+                    })
+                    .leaving((user) => {
+                        removeObjectWithId(users.value, user.id)
+                        notify({
+                            type: 'warn',
+                            title: t("Left chat"),
+                            text: user.name,
+                        })
+                    })
+                    .listen('PublicChatMessageEvent', (message) => {
+                        messages.value.push({
+                            myMessage: message.message,
+                            name: message.name,
+                            userId: message.user_id
+                        })
+                        scrollToEnd()
+                    })
+                    .listenForWhisper('typing', (user) => {
+                        typingUsers.value = user;
+                        typingTimer.value = true
+                        if (typingTimer.value)
+                            clearTimeout(typingTimer.value);
+                        typingTimer.value = setTimeout(() => {
+                            typingUsers.value = null;
+                        }, 3000);
+
+                    })
+            },
+        )
+        onBeforeUnmount(() => {
+            Echo.leave('publicChat');
+        })
+        return {
+            currentUser,
+            message,
+            messages,
+            users,
+            typingUsers,
+            typingTimer,
+            chanel,
+            sendTypingEvent,
+            sendMessage,
+            chatWindow
         }
     }
 }
 </script>
 
-<style scoped>
-a {
-    text-decoration: none;
-}
-
-.chat-box {
-    overflow-y: auto;
-    max-height: 400px;
-    scroll-behavior: smooth;
-
-}
-
-.profileImage {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: #512DA8;
-    font-size: 26px;
-    color: #fff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-right: 10px;
-}
-
-.chat-box::-webkit-scrollbar-track {
-    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-    background-color: #F5F5F5;
-    border-radius: 10px;
-}
-
-.chat-box::-webkit-scrollbar {
-    width: 5px;
-    background-color: #F5F5F5;
-}
-
-.chat-box::-webkit-scrollbar-thumb {
-    border-radius: 10px;
-    background-image: -webkit-gradient(linear,
-    left bottom,
-    left top,
-    color-stop(0.44, rgb(122, 153, 217)),
-    color-stop(0.72, rgb(73, 125, 189)),
-    color-stop(0.86, rgb(28, 58, 148)));
-}
-</style>

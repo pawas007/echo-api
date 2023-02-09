@@ -43,23 +43,3 @@ export default {
 }
 </script>
 
-<style scoped lang="scss">
-.locale_btn{
-    outline: none;
-    border: navajowhite;
-    background: none;
-    border-radius: 50%;
-    img{
-            border-radius: 50%;
-            border: 4px solid transparent;
-        }
-
-    &.active{
-        img{
-            border-radius: 50%;
-            border: 4px solid #5c636a;
-        }
-    }
-
-}
-</style>

@@ -13,7 +13,10 @@
                 <p>{{ user.email }}</p>
             </div>
             <div class="col align-self-center d-flex justify-content-end">
-                <button class="btn btn-secondary pull-right" @click="removeRequest(user.id)">{{ $t("Cansel request") }}</button>
+                <button class="btn btn-secondary pull-right" @click="removeRequest(user.id)">{{
+                        $t("Cansel request")
+                    }}
+                </button>
             </div>
         </div>
         <div class="mt-3 d-flex justify-content-center" v-if="paginator.pageCount > 1">
@@ -33,49 +36,45 @@
 <script>
 import Paginate from "vuejs-paginate-next";
 import axios from "axios";
+import {onBeforeMount, reactive, ref} from "vue";
 
 export default {
     name: "PendingFriends",
     components: {
         Paginate
     },
-    data() {
-        return {
-            paginator: {
-                currentPage: 1,
-                pageCount: 0,
-            },
-            pendingFriendRequests: {
-                type: Array,
-                default: []
-            }
-        }
-    },
-    mounted() {
-        this.pendingList()
-    },
-    methods: {
-        pendingList(page = 1) {
-            axios.get(`friend/pending?page=${page}`).then(({data}) => {
-                this.pendingFriendRequests = data.data
-                this.paginator.pageCount = data.last_page
-            }).catch(({response}) => {
-                console.error(response)
-            })
-        },
-        removeRequest(user) {
-            axios.get(`friend/pending/${user}/cansel`).then((req) => {
-                this.pendingList(this.paginator.currentPage)
+    setup() {
+        const pendingFriendRequests = ref([])
+        const paginator = reactive({
+            currentPage: 1,
+            pageCount: 0,
+        })
+
+        const  removeRequest = (user) => {
+            axios.get(`friend/pending/${user}/cansel`).then(() => {
+                pendingList(paginator.currentPage)
             }).catch(({response}) => {
                 console.error(response)
             })
         }
-    }
+
+        const pendingList = async (page = 1) => {
+            await axios.get(`friend/pending?page=${page}`).then(({data}) => {
+                pendingFriendRequests.value = data.data
+                paginator.pageCount = data.last_page
+            }).catch(({response}) => {
+                console.error(response)
+            })
+        }
+        onBeforeMount(() => {
+            pendingList()
+        })
+
+        return {pendingFriendRequests, removeRequest, paginator,pendingList}
+
+    },
+
 }
 </script>
 
-
-<!--MAKE NOTIFICATION-->
-<!--SHOW FRIEND TO CONNECT LIST-->
-<!--save public massages-->
 

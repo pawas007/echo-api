@@ -1,7 +1,7 @@
 <template>
     <div>
         <Teleport to="#notificationsList">
-        <push-notifications/>
+            <push-notifications/>
         </Teleport>
         <Teleport to="#teleport-nav">
             <header-nav/>

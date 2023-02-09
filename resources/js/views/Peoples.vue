@@ -14,7 +14,7 @@
                         <!--                                <p class="text-muted">500m away</p>-->
                     </div>
                     <div class="col align-self-center d-flex justify-content-end">
-                        <button class="btn btn-primary pull-right" @click="addFriend(user.id)"> {{ $t("Add friend") }}
+                        <button class="btn btn-secondary pull-right" @click="addFriend(user.id)"> {{ $t("Add friend") }}
                         </button>
                     </div>
                 </div>

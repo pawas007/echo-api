@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Events\FriendsCountUpdateEvent;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -115,7 +114,6 @@ class User extends Authenticatable
     public function pendingCancel(User $user): void
     {
         $this->friendPendingRequest()->detach($user->id);
-        broadcast(new FriendsCountUpdateEvent());
     }
 
     public function friendCounts(): array

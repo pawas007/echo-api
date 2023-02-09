@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\FriendController;
-
+use Illuminate\Http\Request;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,7 +37,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     });
 
     //    Sockets events
-    Route::post('public-chat/message', function (\Illuminate\Http\Request $request) {
+    Route::post('public-chat/message', function (Request $request) {
         broadcast(new \App\Events\PublicChatMessageEvent($request->message));
     });
 

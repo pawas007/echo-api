@@ -2,13 +2,11 @@
 
 namespace App\Http\Controllers;
 
-
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Response;
 use App\Models\User;
-
 
 class FriendController extends Controller
 {
@@ -108,3 +106,5 @@ class FriendController extends Controller
     }
 
 }
+
+//TODO : response only json

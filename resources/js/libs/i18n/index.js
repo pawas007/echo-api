@@ -6,8 +6,6 @@ const loadLocaleMessages = {
     ua: ua,
     en: en
 }
-
-
 export default createI18n({
     locale: import.meta.env.VITE_DEFAULT_LOCALE,
     fallbackLocale: import.meta.env.VITE_DEFAULT_LOCALE,

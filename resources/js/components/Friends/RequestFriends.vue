@@ -1,9 +1,9 @@
 <template>
     <div>
-        <div class="mt-5" v-if="!pendingFriendRequests.length">
+        <div class="mt-5" v-if="!friendRequests.length">
             <h5 class="h5">{{ $t("There are no friends waiting for confirmation") }}</h5>
         </div>
-        <div class="row border-bottom mb-2 py-2" v-for="user in pendingFriendRequests">
+        <div class="row border-bottom mb-2 py-2" v-for="user in friendRequests">
             <div class="col-md-2 col-sm-2">
                 <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="user"
                      class="profile-photo-lg">
@@ -13,8 +13,14 @@
                 <p>{{ user.email }}</p>
             </div>
             <div class="col align-self-center d-flex justify-content-end">
-                <button class="btn btn-secondary pull-right mx-1" @click="acceptFriend(user.id)">{{ $t("Accept") }}</button>
-                <button class="btn btn-secondary pull-right" @click="declineFriend(user.id)">{{ $t("Decline") }}</button>
+                <button class="btn btn-secondary pull-right mx-1" @click="acceptFriend(user.id)">{{
+                        $t("Accept")
+                    }}
+                </button>
+                <button class="btn btn-secondary pull-right" @click="declineFriend(user.id)">{{
+                        $t("Decline")
+                    }}
+                </button>
             </div>
         </div>
         <div class="mt-3 d-flex justify-content-center" v-if="paginator.pageCount > 1">
@@ -34,55 +40,52 @@
 <script>
 import Paginate from "vuejs-paginate-next";
 import axios from "axios";
+import {onBeforeMount, reactive, ref} from "vue";
 
 export default {
     name: "RequestFriends",
     components: {
         Paginate
     },
-    data() {
-        return {
-            paginator: {
-                currentPage: 1,
-                pageCount: 0,
-            },
-            pendingFriendRequests: {
-                type: Array,
-                default: []
-            }
-        }
-    },
-    mounted() {
-        this.requestList()
-    },
-    methods: {
-        requestList(page = 1) {
+
+    setup() {
+        const friendRequests = ref([])
+        const paginator = reactive({
+            currentPage: 1,
+            pageCount: 0,
+        })
+
+        const requestList = (page = 1) => {
             axios.get(`friend/request?page=${page}`).then(({data}) => {
-                this.pendingFriendRequests = data.data
-                this.paginator.pageCount = data.last_page
-            }).catch(({response}) => {
-                console.error(response)
-            })
-        },
-        acceptFriend(user) {
-            axios.get(`friend/request/${user}/accept`).then((req) => {
-                this.requestList(this.paginator.currentPage)
-            }).catch(({response}) => {
-                console.error(response)
-            })
-        },
-        declineFriend(user) {
-            axios.get(`friend/request/${user}/decline`).then((req) => {
-                this.requestList(this.paginator.currentPage)
+                friendRequests.value = data.data
+                paginator.pageCount = data.last_page
             }).catch(({response}) => {
                 console.error(response)
             })
         }
-    }
+        const acceptFriend = (user) => {
+            axios.get(`friend/request/${user}/accept`).then((req) => {
+                requestList(paginator.currentPage)
+            }).catch(({response}) => {
+                console.error(response)
+            })
+        }
+        const declineFriend = (user) => {
+            axios.get(`friend/request/${user}/decline`).then((req) => {
+                requestList(paginator.currentPage)
+            }).catch(({response}) => {
+                console.error(response)
+            })
+        }
+
+        onBeforeMount(() => {
+            requestList()
+        })
+
+        return {requestList, declineFriend, acceptFriend, friendRequests, paginator}
+
+    },
 }
 </script>
 
-
-<!--MAKE NOTIFICATION-->
-<!--save public massages-->
 
