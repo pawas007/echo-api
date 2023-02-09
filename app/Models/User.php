@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Events\FriendsCountUpdateEvent;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -75,7 +76,7 @@ class User extends Authenticatable
     public function friendAdd($user): void
     {
         $this->friendPendingRequest()->attach($user->id);
-        broadcast(new \App\Events\FriendsCountUpdateEvent());
+
     }
 
     /**
@@ -85,7 +86,7 @@ class User extends Authenticatable
     public function friendDelete($user): void
     {
         $this->friends()->detach($user->id);
-        broadcast(new \App\Events\FriendsCountUpdateEvent());
+
     }
 
     /**
@@ -96,7 +97,6 @@ class User extends Authenticatable
     {
         $this->friendRequest()->detach($user->id);
         $this->friends()->attach($user->id);
-        broadcast(new \App\Events\FriendsCountUpdateEvent());
     }
 
     /**
@@ -106,7 +106,6 @@ class User extends Authenticatable
     public function friendDecline($user): void
     {
         $this->friendRequest()->detach($user->id);
-        broadcast(new \App\Events\FriendsCountUpdateEvent());
     }
 
     /**
@@ -116,8 +115,16 @@ class User extends Authenticatable
     public function pendingCancel(User $user): void
     {
         $this->friendPendingRequest()->detach($user->id);
-        broadcast(new \App\Events\FriendsCountUpdateEvent());
+        broadcast(new FriendsCountUpdateEvent());
     }
 
+    public function friendCounts(): array
+    {
+        return [
+            'friends' => $this->friends()->count(),
+            'pending' => $this->friendPendingRequest()->count(),
+            'request' => $this->friendRequest()->count(),
+        ];
+    }
 
 }

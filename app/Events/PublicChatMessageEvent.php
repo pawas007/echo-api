@@ -36,7 +36,7 @@ class PublicChatMessageEvent implements ShouldBroadcast
      */
     public function broadcastOn(): Channel|PresenceChannel
     {
-        return new PresenceChannel('public-chat');
+        return new PresenceChannel('publicChat');
     }
 
     /**

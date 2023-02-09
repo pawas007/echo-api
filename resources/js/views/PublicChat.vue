@@ -70,7 +70,7 @@ export default {
     },
     computed: {
         chanel() {
-            return Echo.join('public-chat');
+            return Echo.join('publicChat');
         }
     },
     created() {

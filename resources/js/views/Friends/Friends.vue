@@ -52,15 +52,27 @@ export default {
             request: null
         })
 
-        onMounted(() => {
-            Echo.channel('friends').listen('FriendsCountUpdateEvent', (counts) => {
-                const {friends, pending, request} = counts;
+        const friendsCountUpdateSubscribe = () => {
+            axios.get('user').then((r) => {
+                Echo.private('friendsListUpdate').listen('FriendsCountUpdateEvent', (r) => {
+                    console.log(r)
+                    getFriendCounts()
+                })
+            })
+        }
+
+        const getFriendCounts = () => {
+            axios.get('friend/counts').then((r) => {
+                const {friends, pending, request} = r.data;
                 friendsCount.friends = friends
                 friendsCount.pending = pending
                 friendsCount.request = request
-
             })
-            axios.get('friend/count/refresh')
+        }
+
+        onMounted(() => {
+            getFriendCounts()
+            friendsCountUpdateSubscribe()
         })
         return {friendsCount, activeTab}
     },

@@ -31,6 +31,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::get('request/{user}/decline', [FriendController::class, 'friendDecline']);
         Route::get('{user}/add', [FriendController::class, 'friendAdd']);
         Route::get('{user}/delete', [FriendController::class, 'friendDelete']);
+        Route::get('counts', [FriendController::class, 'friendCounts']);
+
 
     });
 
@@ -38,9 +40,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('public-chat/message', function (\Illuminate\Http\Request $request) {
         broadcast(new \App\Events\PublicChatMessageEvent($request->message));
     });
-    Route::get('friend/count/refresh', function () {
-        broadcast(new \App\Events\FriendsCountUpdateEvent());
-    });
+
 });
 
 

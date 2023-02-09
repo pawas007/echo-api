@@ -68,7 +68,7 @@ class FriendController extends Controller
     public function friendDecline(User $user)
     {
         Auth::user()->friendDecline($user);
-        return Response::json(['name' => $user->name],204);
+        return Response::json(['name' => $user->name], 204);
     }
 
 
@@ -104,11 +104,7 @@ class FriendController extends Controller
      */
     public function friendCounts(): JsonResponse
     {
-
-        return Response::json([
-            'friends'=>2,
-            ''
-        ], 204);
+        return Response::json(Auth::user()->friendCounts());
     }
 
 }
