@@ -78,15 +78,15 @@ class FriendController extends Controller
      */
     public function friendAdd(User $user): JsonResponse
     {
-//        if (Auth::user()->friendPendingRequest->contains($user)) {
-//            return Response::json(['message' => 'Friend request already isset']);
-//        }
-//        if (Auth::user()->friends->contains($user)) {
-//            return Response::json(['message' => 'Friend request already added']);
-//        }
+        if (Auth::user()->friendPendingRequest->contains($user)) {
+            return Response::json(['message' => 'Friend request already isset']);
+        }
+        if (Auth::user()->friends->contains($user)) {
+            return Response::json(['message' => 'Friend request already added']);
+        }
         Auth::user()->friendAdd($user);
         $user->notify(new PushNotifyNotification(Auth::user(), 'request', 'send friend request'));
-        return Response::json(['name' => $user->name]);
+        return Response::json([]);
     }
 
 

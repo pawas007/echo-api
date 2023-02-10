@@ -11,10 +11,17 @@
                     <div class="col-md-7 col-sm-7">
                         <h5><p class="profile-link">{{ user.name }}</p></h5>
                         <p>{{ user.email }}</p>
-                        <!--                                <p class="text-muted">500m away</p>-->
-                    </div>
+
+                        <!--                                <p class="text-muted">500m away</p>--></div>
                     <div class="col align-self-center d-flex justify-content-end">
-                        <button class="btn btn-secondary pull-right" @click="addFriend(user.id)"> {{ $t("Add friend") }}
+                        <button v-if="!user.status" class="btn btn-secondary pull-right" @click="addFriend(user.id)">
+                            {{ $t("Add friend") }}
+                        </button>
+                        <button v-if="user.status === 'pending'" class="btn btn-secondary pull-right"
+                                @click="removeRequest(user.id)"> {{ $t("Cansel request") }}
+                        </button>
+                        <button v-if="user.status === 'friend'" class="btn btn-secondary pull-right"
+                                @click="removeFriend(user.id)"> {{ $t("Remove friend") }}
                         </button>
                     </div>
                 </div>
@@ -62,24 +69,40 @@ export default {
 
         const addFriend = (id) => {
             axios.get(`friend/${id}/add`).then((r) => {
-                if (r.status === 201)
-                    notify({
-                        type: 'success',
-                        title: t('Friend request sent'),
-                        text: r.data.name,
-                    })
+                usersList(paginator.currentPage)
+                notify({
+                    type: 'success',
+                    title: t('Friend request sent'),
+                    text: r.data.name,
+                })
             });
         }
-        const usersList = (page = 1) => {
-            axios.get(`users?page=${page}`).then(({data}) => {
-                users.value = data.data
-                paginator.pageCount = data.last_page
+
+        const removeRequest = (user) => {
+            axios.get(`friend/pending/${user}/cansel`).then(() => {
+                usersList(paginator.currentPage)
             }).catch(({response}) => {
                 console.error(response)
             })
         }
 
-        return {addFriend, usersList, paginator, users}
+        const removeFriend = (user) => {
+            axios.get(`friend/${user}/delete`).then(() => {
+                usersList(paginator.currentPage)
+            }).catch(({response}) => {
+                console.error(response)
+            })
+        }
+        const usersList = (page = 1) => {
+            axios.get(`users?page=${page}`).then(({data}) => {
+                users.value = data.data
+                paginator.pageCount = data.meta.last_page
+            }).catch(({response}) => {
+                console.error(response)
+            })
+        }
+
+        return {addFriend, usersList, paginator, users, removeRequest, removeFriend}
     },
 }
 </script>

@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Response;
+use App\Http\Resources\UserCollection;
+
 
 class UserController extends Controller
 {
@@ -19,13 +22,10 @@ class UserController extends Controller
 
     }
 
-    /**
-     * @return JsonResponse
-     */
-    public function users(): JsonResponse
+
+    public function users()
     {
-        $users = User::where('id', '!=', auth()->id())->paginate(10);
-        return Response::json($users);
+        return new UserCollection(User::where('id', '!=', auth()->id())->paginate(10));
     }
 
 }
