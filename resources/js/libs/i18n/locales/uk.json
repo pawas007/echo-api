@@ -23,7 +23,11 @@
     "Peoples": "Користувачі",
     "Friend request sent": "Запрос на добавлення в друзі відправлено",
     "Left chat": "Покинув чат",
-    "Join to chat":"Приєднався до чату"
+    "Join to chat":"Приєднався до чату",
+    "Notifications": "Сповіщення",
+    "Notifications list empty": "Сповіщень немає",
+    "accept friend request": "приняв заявку у друзі",
+    "send friend request": "відправив заявку у друзі"
 
 
 }

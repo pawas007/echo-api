@@ -23,6 +23,11 @@
     "Peoples": "Peoples",
     "Friend request sent": "Friend request send",
     "Left chat": "Left chat",
-    "Join to chat":"Join to chat"
+    "Join to chat":"Join to chat",
+    "Notifications": "Notifications",
+    "accept friend request": "accept friend request",
+    "send friend request": "send friend request",
+    "Notifications list empty": "Notifications list empty"
+
 
 }

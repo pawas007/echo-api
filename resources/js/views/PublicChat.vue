@@ -74,8 +74,6 @@ export default {
         const chatWindow = ref(null);
         const chanel = Echo.join('publicChat')
 
-
-
         const removeObjectWithId = (arr, id) => {
             const objWithIdIndex = arr.findIndex((obj) => obj.id === id);
             arr.splice(objWithIdIndex, 1);
@@ -106,7 +104,6 @@ export default {
         onMounted(() => {
 
                 axios.get('user').then((r) => {
-                    console.log(r.data)
                     currentUser.value = r.data
                 });
 

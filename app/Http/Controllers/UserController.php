@@ -28,6 +28,4 @@ class UserController extends Controller
         return Response::json($users);
     }
 
-
-
 }

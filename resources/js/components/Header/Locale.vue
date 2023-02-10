@@ -23,7 +23,7 @@ export default {
         const availableLocales = reactive(
             [
                 {slug: 'en', name: 'English', ico: ukIcon},
-                {slug: 'ua', name: 'Ukraine', ico: uaIcon},
+                {slug: 'uk', name: 'Ukraine', ico: uaIcon},
             ]
         )
         const currentLocale = ref(import.meta.env.VITE_DEFAULT_LOCALE);

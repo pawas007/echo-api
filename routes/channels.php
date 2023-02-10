@@ -20,3 +20,7 @@ Broadcast::channel('App.User.{id}', function ($user, $id) {
 Broadcast::channel('publicChat', function ($user) {
     return $user;
 });
+
+Broadcast::channel('push_notify.{id}', function ($user, $id) {
+    return (int) $user->id === (int) $id;
+});

@@ -1,9 +1,9 @@
 import {createI18n} from "vue-i18n";
 import en from './locales/en.json' assert {type: 'json'};
-import ua from './locales/ua.json' assert {type: 'json'};
+import uk from './locales/uk.json' assert {type: 'json'};
 
 const loadLocaleMessages = {
-    ua: ua,
+    uk: uk,
     en: en
 }
 export default createI18n({

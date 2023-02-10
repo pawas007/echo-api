@@ -26,3 +26,7 @@ export default {
 }
 </script>
 
+<!--TODO : GET USERS WITH STATUS-->
+<!--TODO : Update Friends count-->
+<!--TODO : Delete& seen notification
+-->
