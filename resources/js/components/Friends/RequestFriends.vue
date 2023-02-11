@@ -63,6 +63,7 @@ export default {
                 console.error(response)
             })
         }
+
         const acceptFriend = (user) => {
             axios.get(`friend/request/${user}/accept`).then((req) => {
                 requestList(paginator.currentPage)

@@ -44,6 +44,7 @@ export default {
     components: {
         Paginate
     },
+
     setup() {
         const friends = ref([])
         const paginator = reactive({
@@ -67,12 +68,12 @@ export default {
                 console.error(response)
             })
         }
+
         onBeforeMount(() => {
             friendslist()
         })
 
         return {friendslist, removeFriend,friends,paginator}
-
     },
 
 }

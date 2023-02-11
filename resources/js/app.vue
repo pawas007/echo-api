@@ -26,9 +26,7 @@ export default {
 }
 </script>
 
-<!--TODO : GET USERS WITH STATUS REFACTOR-->
+
 <!--TODO : Update Friends count-->
-<!--TODO : Delete & MarkRead notification-->
-<!--TODO : Refactor same code-->
 <!--TODO : Save public messages-->
 

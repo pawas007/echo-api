@@ -66,12 +66,12 @@ export default {
                 console.error(response)
             })
         }
+
         onBeforeMount(() => {
             pendingList()
         })
 
         return {pendingFriendRequests, removeRequest, paginator,pendingList}
-
     },
 
 }

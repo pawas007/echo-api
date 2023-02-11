@@ -26,7 +26,6 @@ class UserResource extends JsonResource
             return 'friend';
         }
         return false;
-
     }
 
     public function toArray($request): array

@@ -58,6 +58,7 @@ class PushNotifyNotification extends Notification implements ShouldBroadcast
             "data" => [
                 "action" => $this->action,
                 'message' =>$this->message,
+                "created" => now(),
                 "user" => ['name' => $this->user->name],
             ]
         ];

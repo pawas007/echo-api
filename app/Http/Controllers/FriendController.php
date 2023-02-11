@@ -19,7 +19,6 @@ class FriendController extends Controller
      */
     public function friend(): JsonResponse
     {
-
         return Response::json(Auth::user()->friends()->paginate(10));
     }
 
@@ -70,7 +69,6 @@ class FriendController extends Controller
         Auth::user()->friendDecline($user);
         return Response::json(['name' => $user->name], 204);
     }
-
 
     /**
      * @param User $user

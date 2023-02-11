@@ -21,9 +21,13 @@ use Illuminate\Http\Request;
 Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::get('user', [UserController::class, 'auth']);
-    Route::get('notifications', [NotificationsController::class, 'index']);
-
     Route::get('users', [UserController::class, 'users']);
+
+    Route::prefix('notifications')->group(function () {
+        Route::get('', [NotificationsController::class, 'index']);
+        Route::get('{id}/mark/toggle', [NotificationsController::class, 'markAsRead']);
+        Route::get('{id}/destroy', [NotificationsController::class, 'destroy']);
+    });
 
     Route::prefix('friend')->group(function () {
         Route::get('/', [FriendController::class, 'friend']);
@@ -35,8 +39,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::get('{user}/add', [FriendController::class, 'friendAdd']);
         Route::get('{user}/delete', [FriendController::class, 'friendDelete']);
         Route::get('counts', [FriendController::class, 'friendCounts']);
-
-
     });
 
     //    Sockets events

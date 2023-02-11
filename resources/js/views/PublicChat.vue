@@ -29,7 +29,6 @@
                         <div class="card w-100">
                             <div class="card-header d-flex justify-content-between p-3">
                                 <p class="fw-bold mb-0">{{ message.name }}</p>
-                                <!--                                <p class="text-muted small mb-0"><i class="far fa-clock"></i> 10 mins ago</p>-->
                             </div>
                             <div class="card-body">
                                 <p class="mb-0">
@@ -79,16 +78,19 @@ export default {
             arr.splice(objWithIdIndex, 1);
             return arr;
         }
+
         const sendTypingEvent = () => {
             return Echo.join('publicChat')
                 .whisper('typing', currentUser.value);
         }
+
         const scrollToEnd = () => {
             setTimeout(() => {
                 let chat = chatWindow.value;
                 chat.scrollTop = chat.scrollHeight + 200;
             }, 100)
         }
+
         const sendMessage = () => {
             axios.post('public-chat/message', {'message': message.value}).then(() => {
                 messages.value.push({
@@ -98,15 +100,12 @@ export default {
                 })
                 message.value = '';
                 scrollToEnd()
-
             });
         }
         onMounted(() => {
-
                 axios.get('user').then((r) => {
                     currentUser.value = r.data
                 });
-
                 chanel
                     .here((usersOnline) => {
                         users.value = usersOnline
@@ -146,9 +145,11 @@ export default {
                     })
             },
         )
+
         onBeforeUnmount(() => {
             Echo.leave('publicChat');
         })
+
         return {
             currentUser,
             message,

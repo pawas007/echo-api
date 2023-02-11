@@ -10,9 +10,7 @@
                     </div>
                     <div class="col-md-7 col-sm-7">
                         <h5><p class="profile-link">{{ user.name }}</p></h5>
-                        <p>{{ user.email }}</p>
-
-                        <!--                                <p class="text-muted">500m away</p>--></div>
+                        <p>{{ user.email }}</p></div>
                     <div class="col align-self-center d-flex justify-content-end">
                         <button v-if="!user.status" class="btn btn-secondary pull-right" @click="addFriend(user.id)">
                             {{ $t("Add friend") }}
@@ -63,10 +61,6 @@ export default {
             pageCount: 0,
         })
 
-        onBeforeMount(() => {
-            usersList()
-        })
-
         const addFriend = (id) => {
             axios.get(`friend/${id}/add`).then((r) => {
                 usersList(paginator.currentPage)
@@ -93,6 +87,7 @@ export default {
                 console.error(response)
             })
         }
+
         const usersList = (page = 1) => {
             axios.get(`users?page=${page}`).then(({data}) => {
                 users.value = data.data
@@ -101,6 +96,10 @@ export default {
                 console.error(response)
             })
         }
+
+        onBeforeMount(() => {
+            usersList()
+        })
 
         return {addFriend, usersList, paginator, users, removeRequest, removeFriend}
     },

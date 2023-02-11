@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Notifications\PushNotifyNotification;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -76,8 +75,6 @@ class User extends Authenticatable
     public function friendAdd($user): void
     {
         $this->friendPendingRequest()->attach($user->id);
-
-
     }
 
     /**

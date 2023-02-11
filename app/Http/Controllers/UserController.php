@@ -22,7 +22,9 @@ class UserController extends Controller
 
     }
 
-
+    /**
+     * @return UserCollection
+     */
     public function users()
     {
         return new UserCollection(User::where('id', '!=', auth()->id())->paginate(10));

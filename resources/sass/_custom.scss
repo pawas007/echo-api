@@ -212,9 +212,7 @@ img.profile-photo-lg {
         .notify_list {
             padding: 0;
 
-            .new-message {
-                background: #e6d7d7;
-            }
+
 
             .list-item {
                 background: #F5F5F5;
@@ -227,6 +225,9 @@ img.profile-photo-lg {
                 display: flex;
                 align-content: center;
 
+                &.new-message {
+                    background: #e6d7d7;
+                }
                 .message_box {
                     .notify-message-text {
                         color: #212529;

@@ -44,13 +44,13 @@ export default {
         MyFriends,
     },
     setup() {
-
         const activeTab = ref("MyFriends")
         const friendsCount = reactive({
             friends: null,
             pending: null,
             request: null
         })
+
         const getFriendCounts = () => {
             axios.get('friend/counts').then((r) => {
                 const {friends, pending, request} = r.data;
@@ -63,6 +63,7 @@ export default {
         onMounted(() => {
             getFriendCounts()
         })
+
         return {friendsCount, activeTab}
     },
 }
