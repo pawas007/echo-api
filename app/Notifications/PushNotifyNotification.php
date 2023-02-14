@@ -63,8 +63,6 @@ class PushNotifyNotification extends Notification implements ShouldBroadcast
             ]
         ];
 
-        return new BroadcastMessage([
-            'notification' => $notification
-        ]);
+        return new BroadcastMessage($notification);
     }
 }

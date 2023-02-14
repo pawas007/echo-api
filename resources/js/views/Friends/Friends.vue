@@ -51,14 +51,14 @@ export default {
             request: null
         })
 
-        const getFriendCounts = () => {
-            axios.get('friend/counts').then((r) => {
-                const {friends, pending, request} = r.data;
+        const getFriendCounts = () =>
+            axios.get('friend/counts').then(responce => {
+                const {friends, pending, request} = responce.data
                 friendsCount.friends = friends
                 friendsCount.pending = pending
                 friendsCount.request = request
             })
-        }
+
 
         onMounted(() => {
             getFriendCounts()

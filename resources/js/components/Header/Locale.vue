@@ -4,8 +4,7 @@
             class="locale_btn"
             v-for="locale in availableLocales"
             @click="changeLocale(locale.slug)"
-            :class="{'active':currentLocale === locale.slug}"
-        >
+            :class="{'active':currentLocale === locale.slug}">
             <img :src="locale.ico" alt="">
         </button>
     </div>
@@ -29,7 +28,7 @@ export default {
         const currentLocale = ref(import.meta.env.VITE_DEFAULT_LOCALE);
         const {locale} = useI18n()
 
-        const changeLocale = (val) => {
+        const changeLocale = val => {
             currentLocale.value = val
             locale.value = val
         }

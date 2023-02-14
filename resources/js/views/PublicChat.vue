@@ -73,25 +73,21 @@ export default {
         const chatWindow = ref(null);
         const chanel = Echo.join('publicChat')
 
-        const removeObjectWithId = (arr, id) => {
-            const objWithIdIndex = arr.findIndex((obj) => obj.id === id);
-            arr.splice(objWithIdIndex, 1);
-            return arr;
-        }
-
+        const removeUserFromList = id =>
+            users.value.splice(users.value.findIndex((obj) => obj.id === id), 1);
         const sendTypingEvent = () => {
             return Echo.join('publicChat')
                 .whisper('typing', currentUser.value);
         }
 
-        const scrollToEnd = () => {
+        const scrollToEnd = () =>
             setTimeout(() => {
                 let chat = chatWindow.value;
                 chat.scrollTop = chat.scrollHeight + 200;
             }, 100)
-        }
 
-        const sendMessage = () => {
+
+        const sendMessage = () =>
             axios.post('public-chat/message', {'message': message.value}).then(() => {
                 messages.value.push({
                     myMessage: message.value,
@@ -101,10 +97,10 @@ export default {
                 message.value = '';
                 scrollToEnd()
             });
-        }
+
         onMounted(() => {
-                axios.get('user').then((r) => {
-                    currentUser.value = r.data
+                axios.get('user').then(responce => {
+                    currentUser.value = responce.data
                 });
                 chanel
                     .here((usersOnline) => {
@@ -119,7 +115,7 @@ export default {
                         })
                     })
                     .leaving((user) => {
-                        removeObjectWithId(users.value, user.id)
+                        removeUserFromList(user.id)
                         notify({
                             type: 'warn',
                             title: t("Left chat"),

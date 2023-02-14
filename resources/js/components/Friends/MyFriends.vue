@@ -52,28 +52,24 @@ export default {
             pageCount: 0,
         })
 
-        const removeFriend = (user) => {
+        const removeFriend = user =>
             axios.get(`friend/${user}/delete`).then(() => {
                 friendslist(paginator.currentPage)
-            }).catch(({response}) => {
-                console.error(response)
             })
-        }
 
-        const friendslist = async (page = 1) => {
+
+        const friendslist = async (page = 1) =>
             await axios.get(`friend?page=${page}`).then(({data}) => {
                 friends.value = data.data
                 paginator.pageCount = data.last_page
-            }).catch(({response}) => {
-                console.error(response)
             })
-        }
+
 
         onBeforeMount(() => {
             friendslist()
         })
 
-        return {friendslist, removeFriend,friends,paginator}
+        return {friendslist, removeFriend, friends, paginator}
     },
 
 }

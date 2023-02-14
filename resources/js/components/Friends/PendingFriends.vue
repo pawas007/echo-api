@@ -50,28 +50,24 @@ export default {
             pageCount: 0,
         })
 
-        const  removeRequest = (user) => {
-            axios.get(`friend/pending/${user}/cansel`).then(() => {
+        const removeRequest = user =>
+            axios.get(`friend/pending/${user}/cansel`).then(() =>
                 pendingList(paginator.currentPage)
-            }).catch(({response}) => {
-                console.error(response)
-            })
-        }
+            )
 
-        const pendingList = async (page = 1) => {
+
+        const pendingList = async (page = 1) =>
             await axios.get(`friend/pending?page=${page}`).then(({data}) => {
                 pendingFriendRequests.value = data.data
                 paginator.pageCount = data.last_page
-            }).catch(({response}) => {
-                console.error(response)
             })
-        }
+
 
         onBeforeMount(() => {
             pendingList()
         })
 
-        return {pendingFriendRequests, removeRequest, paginator,pendingList}
+        return {pendingFriendRequests, removeRequest, paginator, pendingList}
     },
 
 }

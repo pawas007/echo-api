@@ -55,29 +55,22 @@ export default {
             pageCount: 0,
         })
 
-        const requestList = (page = 1) => {
+        const requestList = (page = 1) =>
             axios.get(`friend/request?page=${page}`).then(({data}) => {
                 friendRequests.value = data.data
                 paginator.pageCount = data.last_page
-            }).catch(({response}) => {
-                console.error(response)
             })
-        }
 
-        const acceptFriend = (user) => {
-            axios.get(`friend/request/${user}/accept`).then((req) => {
+
+        const acceptFriend = user =>
+            axios.get(`friend/request/${user}/accept`).then(() =>
                 requestList(paginator.currentPage)
-            }).catch(({response}) => {
-                console.error(response)
-            })
-        }
-        const declineFriend = (user) => {
-            axios.get(`friend/request/${user}/decline`).then((req) => {
+            )
+
+        const declineFriend = id =>
+            axios.get(`friend/request/${id}/decline`).then(() =>
                 requestList(paginator.currentPage)
-            }).catch(({response}) => {
-                console.error(response)
-            })
-        }
+            )
 
         onBeforeMount(() => {
             requestList()

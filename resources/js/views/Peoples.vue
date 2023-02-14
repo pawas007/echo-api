@@ -61,39 +61,32 @@ export default {
             pageCount: 0,
         })
 
-        const addFriend = (id) => {
-            axios.get(`friend/${id}/add`).then((r) => {
+        const addFriend = id =>
+            axios.get(`friend/${id}/add`).then(responce  => {
                 usersList(paginator.currentPage)
                 notify({
                     type: 'success',
                     title: t('Friend request sent'),
-                    text: r.data.name,
+                    text: responce.data.name,
                 })
             });
-        }
 
-        const removeRequest = (user) => {
-            axios.get(`friend/pending/${user}/cansel`).then(() => {
+
+        const removeRequest = (user) =>
+            axios.get(`friend/pending/${user}/cansel`).then(() =>
                 usersList(paginator.currentPage)
-            }).catch(({response}) => {
-                console.error(response)
-            })
-        }
+            )
 
-        const removeFriend = (user) => {
+
+        const removeFriend = user =>
             axios.get(`friend/${user}/delete`).then(() => {
                 usersList(paginator.currentPage)
-            }).catch(({response}) => {
-                console.error(response)
             })
-        }
 
         const usersList = (page = 1) => {
-            axios.get(`users?page=${page}`).then(({data}) => {
-                users.value = data.data
-                paginator.pageCount = data.meta.last_page
-            }).catch(({response}) => {
-                console.error(response)
+            axios.get(`users?page=${page}`).then(responce  => {
+                users.value = responce.data.data
+                paginator.pageCount = responce.data.meta.last_page
             })
         }
 
