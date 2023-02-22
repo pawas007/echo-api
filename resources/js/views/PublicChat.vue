@@ -19,11 +19,12 @@
                     </div>
                 </div>
             </div>
+            {{ authUser }}
             <div class="col-md-6 col-lg-7 col-xl-8">
                 <div class="pb-4 h6" v-if="!messages.length">{{ $t("No messages") }}</div>
                 <ul class="list-unstyled chat-box me-2" id="chat-box" ref="chatWindow">
                     <li class="d-flex justify-content-between  mb-4" v-for="message in messages"
-                        :class="{'flex-row-reverse': message.userId == currentUser.id}">
+                        :class="{'flex-row-reverse': message.userId == authUser.id}">
                         <img src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-6.webp" alt="avatar"
                              class="rounded-circle d-flex align-self-start me-3 shadow-1-strong" width="60">
                         <div class="card w-100">
@@ -58,13 +59,16 @@ import axios from "axios";
 import {ref, computed, onMounted, onBeforeUnmount} from "vue";
 import {notify} from "@kyvg/vue3-notification";
 import {useI18n} from "vue-i18n";
+import {useStore} from "vuex";
 
 export default {
     name: "Chat",
 
     setup() {
+        const authUser = computed(function () {
+            return useStore().getters.AUTH_USER
+        });
         const {t} = useI18n();
-        const currentUser = ref(null);
         const message = ref('');
         const messages = ref([]);
         const users = ref([]);
@@ -77,7 +81,7 @@ export default {
             users.value.splice(users.value.findIndex((obj) => obj.id === id), 1);
         const sendTypingEvent = () => {
             return Echo.join('publicChat')
-                .whisper('typing', currentUser.value);
+                .whisper('typing', authUser.value);
         }
 
         const scrollToEnd = () =>
@@ -91,17 +95,14 @@ export default {
             axios.post('public-chat/message', {'message': message.value}).then(() => {
                 messages.value.push({
                     myMessage: message.value,
-                    name: currentUser.value.name,
-                    userId: currentUser.id
+                    name: authUser.value.name,
+                    userId: authUser.id
                 })
                 message.value = '';
                 scrollToEnd()
             });
 
         onMounted(() => {
-                axios.get('user').then(responce => {
-                    currentUser.value = responce.data
-                });
                 chanel
                     .here((usersOnline) => {
                         users.value = usersOnline
@@ -147,7 +148,6 @@ export default {
         })
 
         return {
-            currentUser,
             message,
             messages,
             users,
@@ -156,7 +156,8 @@ export default {
             chanel,
             sendTypingEvent,
             sendMessage,
-            chatWindow
+            chatWindow,
+            authUser
         }
     }
 }

@@ -1,0 +1,109 @@
+version: '3'
+
+networks:
+    app-newecho:
+        driver: bridge
+
+services:
+    php:
+        build:
+            context: .
+            dockerfile: ./docker/php/Dockerfile
+        container_name: newecho_php
+        ports:
+            - "9000:9000"
+        volumes:
+            - ./:/var/www
+        networks:
+            - app-newecho
+
+    proxy:
+        image: nginx:alpine
+        container_name: newecho_nginx
+        restart: unless-stopped
+        working_dir: /var/www
+        tty: true
+        ports:
+            - "80:80"
+        volumes:
+            - ./:/var/www
+            - ./docker/nginx/conf.d/:/etc/nginx/conf.d/
+            - ./docker/nginx/log/:/var/log/nginx
+        networks:
+            - app-newecho
+        depends_on:
+            - php
+
+    db:
+        image: mariadb/server:10.3
+        container_name: newecho_db
+        tty: true
+        restart: unless-stopped
+        environment:
+            MARIADB_ROOT_PASSWORD: ${DB_PASSWORD}
+            MARIADB_DATABASE: ${DB_DATABASE}
+            MARIADB_USER: ${DB_USERNAME}
+            MARIADB_PASSWORD: ${DB_PASSWORD}
+            MARIADB_INITDB_SKIP_TZINFO: 1
+            MARIADB_ALLOW_EMPTY_PASSWORD: 1
+        volumes:
+            - './docker/mariadb/:/var/lib/mysql'
+        ports:
+            - "3306:3306"
+        networks:
+            - app-newecho
+
+    redis:
+        image: redis:latest
+        container_name: newecho_redis
+        tty: true
+        restart: unless-stopped
+        ports:
+            - "6379:6379"
+        environment:
+            ALLOW_EMPTY_PASSWORD: 1
+        volumes:
+            - ./docker/cache/redis:/data
+        networks:
+            - app-newecho
+
+    memcached:
+        image: memcached:latest
+        container_name: newecho_memcached
+        tty: true
+        restart: unless-stopped
+        ports:
+            - "11211:11211"
+        networks:
+            - app-newecho
+
+    composer:
+        image: composer:latest
+        container_name: newecho_composer
+        volumes:
+            - ./:/var/www/
+        working_dir: /var/www/
+        depends_on:
+            - php
+        networks:
+            - app-newecho
+
+    npm:
+        image: node:latest
+        container_name: newecho_npm
+        working_dir: /var/www
+        ports:
+            - "5173:5173"
+        volumes:
+            - ./:/var/www
+        networks:
+            - app-newecho
+        profiles: [ "npm" ]
+        entrypoint: [ 'npm' ]
+        depends_on:
+            - php
+
+
+
+
+

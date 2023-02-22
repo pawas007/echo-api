@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\FriendController;
 use Illuminate\Http\Request;
+use App\Http\Controllers\UserSettingController;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,6 +22,7 @@ use Illuminate\Http\Request;
 Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::get('user', [UserController::class, 'auth']);
+    Route::get('user/settings', [UserSettingController::class, 'settings']);
     Route::get('users', [UserController::class, 'users']);
 
     Route::prefix('notifications')->group(function () {

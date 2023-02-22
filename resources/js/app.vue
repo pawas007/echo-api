@@ -19,10 +19,19 @@
 import HeaderNav from "@/components/Header/Header-nav.vue";
 import Locale from "@/components/Header/Locale.vue";
 import PushNotifications from "@/components/Header/PushNotifications.vue";
+import {useStore} from "vuex";
 
 export default {
     name: "app",
-    components: {PushNotifications, Locale, HeaderNav}
+    components: {PushNotifications, Locale, HeaderNav},
+
+    setup() {
+        useStore().dispatch('GET_AUTH_USER')
+        useStore().dispatch('GET_AUTH_USER_SETTINGS')
+
+    }
+
+
 }
 </script>
 
