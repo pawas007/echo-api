@@ -9,17 +9,21 @@ services:
         build:
             context: .
             dockerfile: ./docker/php/Dockerfile
-        container_name: newecho_php
+        container_name: echo_php
         ports:
             - "9000:9000"
+            - "6001:6001"
         volumes:
+            - ./docker/php/php.ini:/usr/local/etc/php/conf.d/local.ini
             - ./:/var/www
         networks:
-            - api-echo
+            - echo-api
+        depends_on:
+            -   redis
 
     proxy:
         image: nginx:alpine
-        container_name: newecho_nginx
+        container_name: echo_nginx
         restart: unless-stopped
         working_dir: /var/www
         tty: true
@@ -30,13 +34,13 @@ services:
             - ./docker/nginx/conf.d/:/etc/nginx/conf.d/
             - ./docker/nginx/log/:/var/log/nginx
         networks:
-            - app-newecho
+            - echo-api
         depends_on:
             - php
 
     db:
         image: mariadb/server:10.3
-        container_name: newecho_db
+        container_name: echo_db
         tty: true
         restart: unless-stopped
         environment:
@@ -51,11 +55,38 @@ services:
         ports:
             - "3306:3306"
         networks:
-            - app-newecho
+            - echo-api
+    mongo:
+        image: mongo:3.4
+        container_name: echo_mongo
+        volumes:
+            - './docker/mongo/:/data/db'
+        environment:
+            - MONGO_INITDB_DATABASE=${DB_MONGO_DATABASE}
+            - MONGO_INITDB_ROOT_USERNAME=${DB_MONGO_USERNAME}
+            - MONGO_INITDB_ROOT_PASSWORD=${DB_MONGO_PASSWORD}
+        ports:
+            - "27017:27017"
+
+    phpmyadmin:
+        image: phpmyadmin/phpmyadmin
+        container_name: echo_pma
+        environment:
+            PMA_HOST: db
+            PMA_USER: root
+            PMA_PASSWORD: ${DB_PASSWORD}
+            UPLOAD_LIMIT: 1G
+        restart: always
+        ports:
+            - "8086:80"
+        links:
+            - db
+        networks:
+            - echo-api
 
     redis:
         image: redis:latest
-        container_name: newecho_redis
+        container_name: echo_redis
         tty: true
         restart: unless-stopped
         ports:
@@ -65,29 +96,17 @@ services:
         volumes:
             - ./docker/cache/redis:/data
         networks:
-            - app-newecho
+            - echo-api
 
     memcached:
         image: memcached:latest
-        container_name: newecho_memcached
+        container_name: echo_memcached
         tty: true
         restart: unless-stopped
         ports:
             - "11211:11211"
         networks:
-            - app-newecho
-
-    composer:
-        image: composer:latest
-        container_name: newecho_composer
-        volumes:
-            - ./:/var/www/
-        working_dir: /var/www/
-        depends_on:
-            - php
-        networks:
-            - app-newecho
-
+            - echo-api
 
 
 

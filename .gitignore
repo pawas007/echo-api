@@ -19,3 +19,4 @@ yarn-error.log
 /docker/nginx/log/
 /docker/mariadb/
 /docker/cache/
+/docker/mongo/
