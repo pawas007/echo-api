@@ -6,7 +6,9 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\FriendController;
 use Illuminate\Http\Request;
 use App\Http\Controllers\UserSettingController;
-
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\LogoutController;
+use App\Http\Controllers\Auth\RegisterController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -18,9 +20,11 @@ use App\Http\Controllers\UserSettingController;
 |
 */
 
+Route::post('login', [LoginController::class, 'login']);
+Route::post('register', [RegisterController::class, 'register']);
 
 Route::middleware(['auth:sanctum'])->group(function () {
-
+    Route::post('logout', [LogoutController::class, 'logout']);
     Route::get('user', [UserController::class, 'auth']);
     Route::get('user/settings', [UserSettingController::class, 'settings']);
     Route::get('users', [UserController::class, 'users']);

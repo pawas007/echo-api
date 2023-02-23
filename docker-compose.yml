@@ -1,7 +1,7 @@
 version: '3'
 
 networks:
-    app-newecho:
+    echo-api:
         driver: bridge
 
 services:
@@ -15,7 +15,7 @@ services:
         volumes:
             - ./:/var/www
         networks:
-            - app-newecho
+            - api-echo
 
     proxy:
         image: nginx:alpine
@@ -88,20 +88,6 @@ services:
         networks:
             - app-newecho
 
-    npm:
-        image: node:latest
-        container_name: newecho_npm
-        working_dir: /var/www
-        ports:
-            - "5173:5173"
-        volumes:
-            - ./:/var/www
-        networks:
-            - app-newecho
-        profiles: [ "npm" ]
-        entrypoint: [ 'npm' ]
-        depends_on:
-            - php
 
 
 

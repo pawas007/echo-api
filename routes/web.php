@@ -12,12 +12,10 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Auth::routes();
-Route::get('/{any}', function () {
-    return view('home');
-})->where('any', '^.*$')
-    ->name('spa')
-    ->middleware('auth');
+
+Route::get('/', function () {
+    return view('app');
+});
 
 
 
