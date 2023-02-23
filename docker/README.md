@@ -14,9 +14,9 @@
 - Зупинити контейнер `docker stop ***`
 - Запустити контейнер `docker start ***`
 - Перезапустити контейнер `docker restart ***`
-- Зупинити всі контейнери `docker kill $(docker ps -q)`
+- Stop All Containers `docker kill $(docker ps -q)`
 - Перезапустити  всі контейнери `docker restart $(docker ps -q)`
-- Консоль контейнера `docker exec -ti pawomarket_php bash`
+- Консоль контейнера `docker exec -ti pawomarket_php bash` 
 
 ## Docker without sudo on linux
 To create the docker group and add your user:
