@@ -1,22 +1,22 @@
 #  Laravel  with Docker Compose
 
 ## Docker's command helpers
-- Створення імеджів `docker-compose build` (Робиться один раз для проекта. Якщо добавився або змінився контейнер - треба робили ребілд)
-- Запуск контейнерів `docker-compose up -d`
-- Зупинка контейнерів `docker-compose down`
-- Перегляд логів `docker-compose logs ***`
-- Консоль контейнера `docker-compose exec *** bash`
+- Create images `docker-compose build`
+- Up all containers `docker-compose up -d`
+- Stop all containers `docker-compose down`
+- Logs `docker-compose logs ***`
+- Container console `docker-compose exec *** bash`
 
 ## Docker's command linux
-- Всі образи `docker image ls`
-- Видалити образ `docker image rm ***`
-- Всі запущені контейнери `docker ps / docker container ls`
-- Зупинити контейнер `docker stop ***`
-- Запустити контейнер `docker start ***`
-- Перезапустити контейнер `docker restart ***`
+- All images `docker image ls`
+- Delete images `docker image rm ***`
+- All running containers `docker ps / docker container ls`
+- Stop container `docker stop ***`
+- Run container `docker start ***`
+- Restart container `docker restart ***`
 - Stop All Containers `docker kill $(docker ps -q)`
-- Перезапустити  всі контейнери `docker restart $(docker ps -q)`
-- Консоль контейнера `docker exec -ti pawomarket_php bash` 
+- Restart all container `docker restart $(docker ps -q)`
+- Container console `docker exec -ti *** bash` 
 
 ## Docker without sudo on linux
 To create the docker group and add your user:
@@ -30,7 +30,7 @@ To create the docker group and add your user:
 - git clone project to src folder
 
 ## Add all access to db user
--  Зайти в консоль sql
+-  go to sql
 - `mysql -uroot -p`
 - `GRANT ALL PRIVILEGES ON * . * TO 'dev'@'%';`
 - `FLUSH PRIVILEGES;`
