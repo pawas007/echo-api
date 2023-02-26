@@ -39,3 +39,6 @@ To create the docker group and add your user:
 - Supervisor status `sudo supervisorctl status`
 - Ports status `netstat -ltupan`
 - Laravel echo server example settings `https://qiita.com/hiro_nr825/items/49cf9784298754bbc0a1`
+- docker-compose run --rm php composer install
+- docker-compose down
+- docker-compose exec php bash 

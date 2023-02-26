@@ -20,3 +20,4 @@ yarn-error.log
 /docker/mariadb/
 /docker/cache/
 /docker/mongo/
+/docker/mails/

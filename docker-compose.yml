@@ -108,6 +108,22 @@ services:
         networks:
             - echo-api
 
+    mailhog:
+        image: mailhog/mailhog:latest
+        container_name: echo_mailhog
+        tty: true
+        privileged: true
+        logging:
+            driver: 'none'
+        command: ["-storage=maildir", "-maildir-path=/maildir"]
+        volumes:
+            - ./docker/mails:/maildir
+        ports:
+            - "1025:1025"
+            - "8025:8025"
+        networks:
+            - echo-api
+
 
 
 
