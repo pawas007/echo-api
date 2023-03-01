@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\NotificationsController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
@@ -22,6 +23,7 @@ use App\Http\Controllers\Auth\RegisterController;
 
 Route::post('login', [LoginController::class, 'login']);
 Route::post('register', [RegisterController::class, 'register']);
+Route::post('forgot-password', [ForgotPasswordController::class, 'submitForgetPasswordForm']);
 
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('logout', [LogoutController::class, 'logout']);

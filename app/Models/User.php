@@ -3,11 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\ForgotPasswordNotification;
 
 
 class User extends Authenticatable
@@ -133,6 +134,11 @@ class User extends Authenticatable
     public function settings()
     {
         return $this->hasOne(UserSetting::class,'user_id','id');
+    }
+
+    public function sendResetPasswordEmail($token)
+    {
+        Notification::send($this, new ForgotPasswordNotification($token));
     }
 
 }
