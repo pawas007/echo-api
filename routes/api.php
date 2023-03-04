@@ -1,34 +1,13 @@
 <?php
 
-use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\NotificationsController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\FriendController;
-use Illuminate\Http\Request;
-use App\Http\Controllers\UserSettingController;
-use App\Http\Controllers\Auth\LoginController;
-use App\Http\Controllers\Auth\LogoutController;
-use App\Http\Controllers\Auth\RegisterController;
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| is assigned the "api" middleware group. Enjoy building your API!
-|
-*/
 
-Route::post('login', [LoginController::class, 'login']);
-Route::post('register', [RegisterController::class, 'register']);
-Route::post('forgot-password', [ForgotPasswordController::class, 'submitForgetPasswordForm']);
 
 Route::middleware(['auth:sanctum'])->group(function () {
-    Route::post('logout', [LogoutController::class, 'logout']);
     Route::get('user', [UserController::class, 'auth']);
-    Route::get('user/settings', [UserSettingController::class, 'settings']);
     Route::get('users', [UserController::class, 'users']);
 
     Route::prefix('notifications')->group(function () {
@@ -47,11 +26,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::get('{user}/add', [FriendController::class, 'friendAdd']);
         Route::get('{user}/delete', [FriendController::class, 'friendDelete']);
         Route::get('counts', [FriendController::class, 'friendCounts']);
-    });
-
-    //    Sockets events
-    Route::post('public-chat/message', function (Request $request) {
-        broadcast(new \App\Events\PublicChatMessageEvent($request->message));
     });
 
 });

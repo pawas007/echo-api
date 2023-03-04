@@ -2,110 +2,100 @@
 
 namespace App\Http\Controllers;
 
-use App\Notifications\PushNotifyNotification;
-use Illuminate\Contracts\Auth\Authenticatable;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Response;
 use App\Models\User;
+use App\Repositories\Friend\FriendRepositoryInterface;
 
 class FriendController extends Controller
 {
 
-    public ?Authenticatable $user;
+    /**
+     * @var FriendRepositoryInterface
+     */
+    protected FriendRepositoryInterface $friendRepository;
 
     /**
-     * @return JsonResponse
+     * @param FriendRepositoryInterface $friendRepository
      */
-    public function friend(): JsonResponse
+    public function __construct(FriendRepositoryInterface $friendRepository)
     {
-        return Response::json(Auth::user()->friends()->paginate(10));
+        $this->friendRepository = $friendRepository;
     }
 
     /**
-     * @return JsonResponse
+     * @return mixed
      */
-    public function friendPending(): JsonResponse
+    public function friend()
     {
-        return Response::json(Auth::user()->friendPendingRequest()->paginate(10));
+        return $this->friendRepository->friendsList();
+    }
+
+    /**
+     * @return mixed
+     */
+    public function friendPending()
+    {
+        return $this->friendRepository->friendPending();
     }
 
     /**
      * @param User $user
-     * @return JsonResponse
+     * @return mixed
      */
-    public function friendPendingCansel(User $user): JsonResponse
+    public function friendPendingCansel(User $user)
     {
-        if (!Auth::user()->friendPendingRequest->contains($user)) {
-            return Response::json(['message' => 'Friend request not found']);
-        }
-        Auth::user()->pendingCancel($user);
-        return Response::json([], 204);
+        return $this->friendRepository->friendPendingCansel($user);
     }
 
     /**
-     * @return JsonResponse
+     * @return mixed
      */
-    public function friendRequest(): JsonResponse
+    public function friendRequest()
     {
-        return Response::json(Auth::user()->friendRequest()->paginate(10));
+        return $this->friendRepository->friendRequest();
     }
 
     /**
-     * @return JsonResponse
+     * @param User $user
+     * @return mixed
      */
     public function friendAccept(User $user)
     {
-        Auth::user()->friendAccept($user);
-        $user->notify(new PushNotifyNotification(Auth::user(), 'accept', 'accept friend request'));
-        return Response::json(['name' => $user->name]);
+        return $this->friendRepository->friendAccept($user);
     }
 
     /**
-     * @return JsonResponse
+     * @param User $user
+     * @return mixed
      */
     public function friendDecline(User $user)
     {
-        Auth::user()->friendDecline($user);
-        return Response::json(['name' => $user->name], 204);
+        return $this->friendRepository->friendDecline($user);
     }
 
     /**
      * @param User $user
-     * @return JsonResponse
+     * @return mixed
      */
-    public function friendAdd(User $user): JsonResponse
+    public function friendAdd(User $user)
     {
-        if (Auth::user()->friendPendingRequest->contains($user)) {
-            return Response::json(['message' => 'Friend request already isset']);
-        }
-        if (Auth::user()->friends->contains($user)) {
-            return Response::json(['message' => 'Friend request already added']);
-        }
-        Auth::user()->friendAdd($user);
-        $user->notify(new PushNotifyNotification(Auth::user(), 'request', 'send friend request'));
-        return Response::json([]);
+        return $this->friendRepository->friendAdd($user);
     }
-
 
     /**
      * @param User $user
-     * @return JsonResponse
+     * @return mixed
      */
-    public function friendDelete(User $user): JsonResponse
+    public function friendDelete(User $user)
     {
-        Auth::user()->friendDelete($user);
-        return Response::json([], 204);
+        return $this->friendRepository->friendDelete($user);
     }
 
     /**
-     * @return JsonResponse
+     * @return void
      */
-    public function friendCounts(): JsonResponse
+    public function friendCounts()
     {
-        return Response::json(Auth::user()->friendCounts());
+        return $this->friendRepository->counts();
     }
-
 }
 
-//TODO : response only json
