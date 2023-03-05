@@ -7,8 +7,13 @@ use App\Http\Controllers\FriendController;
 
 
 Route::middleware(['auth:sanctum'])->group(function () {
-    Route::get('user', [UserController::class, 'auth']);
-    Route::get('users', [UserController::class, 'users']);
+
+
+    Route::prefix('user')->group(function () {
+        Route::get('/', [UserController::class, 'users']);
+        Route::get('/auth', [UserController::class, 'auth']);
+        Route::put('/change/email', [UserController::class, 'changeEmail']);
+    });
 
     Route::prefix('notifications')->group(function () {
         Route::get('', [NotificationsController::class, 'index']);

@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Repositories\User\UserRepositoryInterface;
 use Illuminate\Contracts\Auth\Authenticatable;
 use App\Http\Resources\UserCollection;
+use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
@@ -32,4 +33,13 @@ class UserController extends Controller
     {
         return $this->userRepository->users();
     }
+
+    /**
+     * @return Request
+     */
+    public function changeEmail(Request $request)
+    {
+        return $this->userRepository->changeEmail($request);
+    }
+
 }

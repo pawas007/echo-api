@@ -9,4 +9,7 @@ interface UserRepositoryInterface
 
     public function users();
 
+    public function changeEmail();
+
+
 }
