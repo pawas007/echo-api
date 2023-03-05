@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Repositories\User\UserRepositoryInterface;
 use Illuminate\Contracts\Auth\Authenticatable;
 use App\Http\Resources\UserCollection;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -35,11 +36,20 @@ class UserController extends Controller
     }
 
     /**
-     * @return Request
+     * @return JsonResponse
      */
-    public function changeEmail(Request $request)
+    public function updateEmail()
     {
-        return $this->userRepository->changeEmail($request);
+        return $this->userRepository->updateEmail();
     }
+
+    /**
+     * @return JsonResponse
+     */
+    public function updatePassword()
+    {
+        return $this->userRepository->updatePassword();
+    }
+
 
 }

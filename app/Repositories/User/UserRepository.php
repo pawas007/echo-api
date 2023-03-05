@@ -8,6 +8,8 @@ use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Rules\MatchOldPasswordRule;
+use Illuminate\Support\Facades\Hash;
 
 class UserRepository implements UserRepositoryInterface
 {
@@ -36,7 +38,7 @@ class UserRepository implements UserRepositoryInterface
     }
 
 
-    public function changeEmail(): JsonResponse
+    public function updateEmail(): JsonResponse
     {
         $this->request->validate([
             'email' => 'required|unique:users|email',
@@ -45,7 +47,21 @@ class UserRepository implements UserRepositoryInterface
         $user = Auth::user();
         $user->email = $this->request->email;
         $user->save();
-        return response()->json(['email' => $user->email],200);
+        return response()->json(['email' => $user->email]);
     }
+
+    public function updatePassword(): JsonResponse
+    {
+        $this->request->validate([
+            'current_password' => ['required', new MatchOldPasswordRule],
+            'new_password' => ['required', 'min:8'],
+            'new_confirm_password' => ['same:new_password'],
+        ]);
+
+        User::find(auth()->user()->id)->update(['password' => Hash::make($this->request->new_password)]);
+
+        return response()->json(['message' => 'Password changed']);
+    }
+
 
 }
