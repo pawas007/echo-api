@@ -8,7 +8,6 @@ use App\Http\Controllers\FriendController;
 
 Route::middleware(['auth:sanctum'])->group(function () {
 
-
     Route::prefix('user')->group(function () {
         Route::get('/', [UserController::class, 'users']);
         Route::get('/auth', [UserController::class, 'auth']);
