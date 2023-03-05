@@ -37,7 +37,9 @@ class UserRepository implements UserRepositoryInterface
         return new UserCollection(User::where('id', '!=', auth()->id())->paginate(10));
     }
 
-
+    /**
+     * @return JsonResponse
+     */
     public function updateEmail(): JsonResponse
     {
         $this->request->validate([
@@ -50,6 +52,9 @@ class UserRepository implements UserRepositoryInterface
         return response()->json(['email' => $user->email]);
     }
 
+    /**
+     * @return JsonResponse
+     */
     public function updatePassword(): JsonResponse
     {
         $this->request->validate([
@@ -59,9 +64,6 @@ class UserRepository implements UserRepositoryInterface
         ]);
 
         User::find(auth()->user()->id)->update(['password' => Hash::make($this->request->new_password)]);
-
         return response()->json(['message' => 'Password changed']);
     }
-
-
 }
