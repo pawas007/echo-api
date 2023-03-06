@@ -10,6 +10,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\ForgotPasswordNotification;
+
 /**
  * @method where
  */
@@ -27,6 +28,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'last_seen'
     ];
 
     /**
@@ -47,7 +49,6 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
-
 
 
     /**
@@ -132,17 +133,23 @@ class User extends Authenticatable
 
     public function receivesBroadcastNotificationsOn(): string
     {
-        return 'push_notify.'.$this->id;
+        return 'push_notify.' . $this->id;
     }
 
     public function settings(): HasOne
     {
-        return $this->hasOne(UserSetting::class,'user_id','id');
+        return $this->hasOne(UserSetting::class, 'user_id', 'id');
     }
 
     public function sendResetPasswordEmail($token)
     {
         Notification::send($this, new ForgotPasswordNotification($token));
+    }
+
+
+    public function profile(): HasOne
+    {
+        return $this->hasOne(Profile::class);
     }
 
 }

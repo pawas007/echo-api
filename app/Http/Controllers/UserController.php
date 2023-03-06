@@ -51,5 +51,13 @@ class UserController extends Controller
         return $this->userRepository->updatePassword();
     }
 
+    /**
+     * @return JsonResponse
+     */
+    public function updateProfile()
+    {
+        return $this->userRepository->updateProfile();
+    }
+
 
 }

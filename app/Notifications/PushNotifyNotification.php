@@ -7,7 +7,6 @@ use Illuminate\Notifications\Messages\BroadcastMessage;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Notifications\Notification;
 use App\Models\{User};
-use Auth;
 
 class PushNotifyNotification extends Notification implements ShouldBroadcast
 {

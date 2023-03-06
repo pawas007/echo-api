@@ -4,11 +4,13 @@ namespace App\Repositories\User;
 
 use App\Http\Resources\UserCollection;
 use App\Models\User;
+use Exception;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Rules\MatchOldPasswordRule;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 class UserRepository implements UserRepositoryInterface
@@ -26,7 +28,9 @@ class UserRepository implements UserRepositoryInterface
      */
     public function auth(): User|Authenticatable|null
     {
-        return Auth::user();
+        $user = Auth::user();
+        $user->profile;
+        return $user;
     }
 
     /**
@@ -65,5 +69,33 @@ class UserRepository implements UserRepositoryInterface
 
         User::find(auth()->user()->id)->update(['password' => Hash::make($this->request->new_password)]);
         return response()->json(['message' => 'Password changed']);
+    }
+
+    /**
+     * @return JsonResponse|Exception
+     * @throws Exception
+     */
+    public function updateProfile(): JsonResponse|Exception
+    {
+        $user = Auth::user();
+        DB::beginTransaction();
+        try {
+            $this->request->validate([
+                'name'=>'required'
+            ]);
+            $user->name = $this->request->name;
+            $user->profile()->update([
+                "age" => $this->request->profile['age'],
+                "country" => $this->request->profile['country'],
+                "sex" => $this->request->profile['sex']
+            ]);
+            $user->save();
+            $user->profile;
+            DB::commit();
+            return response()->json($user);
+        } catch (Exception $exception) {
+            DB::rollBack();
+            throw $exception;
+        }
     }
 }

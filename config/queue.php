@@ -71,6 +71,14 @@ return [
             'after_commit' => false,
         ],
 
+        'emails' => [
+            'driver' => 'redis',
+            'table' => 'jobs',
+            'queue' => 'emails',
+            'retry_after' => 90,
+            'after_commit' => false,
+        ],
+
     ],
 
     /*

@@ -11,10 +11,14 @@ class ForgotPasswordNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
+
+
+
     public string $token;
 
     public function __construct(string $token)
     {
+        $this->queue = 'emails';
         $this->token = $token;
     }
 
