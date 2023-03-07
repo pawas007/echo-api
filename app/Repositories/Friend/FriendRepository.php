@@ -18,7 +18,7 @@ class FriendRepository implements FriendRepositoryInterface
      */
     public function friendsList(): JsonResponse
     {
-        return Response::json(Auth::user()->friends()->paginate(10));
+        return Response::json(Auth::user()->friends()->with('profile')->paginate(10));
     }
 
     /**
@@ -26,7 +26,7 @@ class FriendRepository implements FriendRepositoryInterface
      */
     public function friendPending(): JsonResponse
     {
-        return Response::json(Auth::user()->friendPendingRequest()->paginate(10));
+        return Response::json(Auth::user()->friendPendingRequest()->with('profile')->paginate(10));
     }
 
     /**
@@ -47,7 +47,7 @@ class FriendRepository implements FriendRepositoryInterface
      */
     public function friendRequest(): JsonResponse
     {
-        return Response::json(Auth::user()->friendRequest()->paginate(10));
+        return Response::json(Auth::user()->friendRequest()->with('profile')->paginate(10));
     }
 
     /**
