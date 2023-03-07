@@ -14,6 +14,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::put('update/email', [UserController::class, 'updateEmail']);
         Route::put('update/password', [UserController::class, 'updatePassword']);
         Route::put('profile', [UserController::class, 'updateProfile']);
+        Route::post('avatar', [UserController::class, 'updateAvatar']);
+
     });
 
     Route::prefix('notifications')->group(function () {
