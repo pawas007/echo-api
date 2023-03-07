@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Notifications\VerifyEmailNotification;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -139,16 +140,20 @@ class User extends Authenticatable
         return 'push_notify.' . $this->id;
     }
 
-    public function settings(): HasOne
-    {
-        return $this->hasOne(UserSetting::class, 'user_id', 'id');
-    }
+//    public function settings(): HasOne
+//    {
+//        return $this->hasOne(UserSetting::class, 'user_id', 'id');
+//    }
 
     public function sendResetPasswordEmail($token)
     {
         Notification::send($this, new ForgotPasswordNotification($token));
     }
 
+    public function sendVerificationEmail($token)
+    {
+        Notification::send($this, new VerifyEmailNotification($token));
+    }
 
     public function profile(): HasOne
     {

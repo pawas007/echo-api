@@ -23,3 +23,13 @@ return new class extends Migration {
         Schema::dropIfExists('profiles');
     }
 };
+
+//$table->id();
+//$table->integer('user_id');
+//$table->string('code');
+//$table->timestamps();
+//
+//$table->id();
+//$table->integer('user_id');
+//$table->string('token');
+//$table->timestamps();

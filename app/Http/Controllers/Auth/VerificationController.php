@@ -3,40 +3,37 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Providers\RouteServiceProvider;
-use Illuminate\Foundation\Auth\VerifiesEmails;
+use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class VerificationController extends Controller
 {
-    /*
-    |--------------------------------------------------------------------------
-    | Email Verification Controller
-    |--------------------------------------------------------------------------
-    |
-    | This controller is responsible for handling email verification for any
-    | user that recently registered with the application. Emails may also
-    | be re-sent if the user didn't receive the original email message.
-    |
-    */
 
-    use VerifiesEmails;
-
-    /**
-     * Where to redirect users after verification.
-     *
-     * @var string
-     */
-    protected $redirectTo = RouteServiceProvider::HOME;
-
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
+    public function sendVerificationEmail(Request $request)
     {
-        $this->middleware('auth');
-        $this->middleware('signed')->only('verify');
-        $this->middleware('throttle:6,1')->only('verify', 'resend');
+
+        $authUser = User::where('email', $request->email)->first();
+        if (!$authUser){
+            return response()->json(['message' => 'User not found'],404);
+        }
+        if (!$authUser->email_verified_at){
+            return response()->json(['message' => 'User already verified'],201);
+        }
+        $token = Hash::make(Str::random(10));
+        DB::table('users_email_verify')->where('user_id', $authUser->id)->delete();
+        DB::table('users_email_verify')->insert([
+            'user_id' => $authUser->id,
+            'token' => $token
+        ]);
+
+        $authUser->sendVerificationEmail($token);
+        return response()->json(['message' => 'Verify email send. Check your email']);
+
     }
+
+
 }

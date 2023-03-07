@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\NotificationsController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
@@ -15,6 +16,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::put('update/password', [UserController::class, 'updatePassword']);
         Route::put('profile', [UserController::class, 'updateProfile']);
         Route::post('avatar', [UserController::class, 'updateAvatar']);
+        Route::post('/send-verify/email', [VerificationController::class, 'sendVerificationEmail']);
 
     });
 
