@@ -14,11 +14,10 @@ class UserSeeder extends Seeder
             Profile::create(
                 [
                     'user_id' => $user['id'],
-                    'country' => 'Poland',
+                    'country' => null,
                     'age' => Profile::age[array_rand(Profile::age)],
-                    'sex' => 'Male',
+                    'sex' => null,
                     'avatar' => null,
-                    'avatar_file' => null,
                 ]
             );
         });

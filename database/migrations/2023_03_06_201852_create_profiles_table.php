@@ -14,7 +14,6 @@ return new class extends Migration {
             $table->string('age')->nullable();
             $table->string('sex')->nullable();
             $table->string('avatar')->nullable();
-            $table->string('avatar_file')->nullable();
             $table->timestamps();
         });
     }

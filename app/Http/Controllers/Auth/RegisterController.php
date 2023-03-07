@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Events\UserRegisterEvent;
 use App\Http\Controllers\Controller;
 
 use App\Http\Requests\CreateUserRequest;
@@ -39,6 +40,8 @@ class RegisterController extends Controller
             'password' => Hash::make($request->password),
             'email_verified_at' => Carbon::now(),
         ]);
+
+        event(new UserRegisterEvent($user));
 
         return Response::json(['status' => 'success']);
     }

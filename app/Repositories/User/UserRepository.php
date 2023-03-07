@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Rules\MatchOldPasswordRule;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 class UserRepository implements UserRepositoryInterface
 {
@@ -81,7 +82,7 @@ class UserRepository implements UserRepositoryInterface
         DB::beginTransaction();
         try {
             $this->request->validate([
-                'name'=>'required'
+                'name' => 'required'
             ]);
             $user->name = $this->request->name;
             $user->profile()->update([
@@ -98,4 +99,30 @@ class UserRepository implements UserRepositoryInterface
             throw $exception;
         }
     }
+
+
+    /**
+     * @return JsonResponse
+     */
+    public function updateAvatar(): JsonResponse
+    {
+        $this->request->validate([
+            'avatar' => 'required|image|mimes:png,jpg,jpeg'
+        ]);
+
+        if ($this->request->hasFile('avatar')) {
+            $userAvatarFile = $this->request->file('avatar');
+            $authUser = Auth::user();
+            $avatarName = strtolower($authUser->name .time().'-avatar.'. $userAvatarFile->getClientOriginalExtension());
+            $storageFolder = 'images/avatars/';
+            $path = env('APP_URL') . '/storage/images/avatars/' . $avatarName ;
+            $authUser->profile()->update(['avatar' => $path]);
+            Storage::disk('public')->put($storageFolder . $avatarName, $userAvatarFile->getContent());
+
+            return response()->json();
+        }
+
+        return response()->json(['File is empty']);
+    }
+
 }
