@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -11,6 +13,10 @@ use Illuminate\Support\Facades\DB;
 class VerificationController extends Controller
 {
 
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
     public function sendVerificationEmail(Request $request)
     {
 
@@ -26,6 +32,10 @@ class VerificationController extends Controller
 
     }
 
+    /**
+     * @param Request $request
+     * @return Exception|JsonResponse
+     */
     public function verifyEmail(Request $request)
     {
         try {
@@ -44,7 +54,7 @@ class VerificationController extends Controller
             $user->save();
             DB::commit();
             return response()->json(['message' => 'Verified'], 200);
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             DB::rollBack();
             return $exception;
         }
