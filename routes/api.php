@@ -17,6 +17,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::put('profile', [UserController::class, 'updateProfile']);
         Route::post('avatar', [UserController::class, 'updateAvatar']);
         Route::post('/send-verify/email', [VerificationController::class, 'sendVerificationEmail']);
+        Route::post('/verify/email', [VerificationController::class, 'verifyEmail']);
 
     });
 
