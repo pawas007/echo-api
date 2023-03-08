@@ -13,5 +13,6 @@ class CreateUserProfileListener
     public function handle(UserRegisterEvent $event)
     {
         $event->user->profile()->create();
+        $event->user->sendVerificationEmail();
     }
 }

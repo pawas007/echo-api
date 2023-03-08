@@ -150,9 +150,9 @@ class User extends Authenticatable
         Notification::send($this, new ForgotPasswordNotification($token));
     }
 
-    public function sendVerificationEmail($token)
+    public function sendVerificationEmail()
     {
-        Notification::send($this, new VerifyEmailNotification($token));
+        Notification::send($this, new VerifyEmailNotification());
     }
 
     public function profile(): HasOne

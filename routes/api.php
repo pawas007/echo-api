@@ -6,9 +6,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\FriendController;
 
+Route::post('/verify/email', [VerificationController::class, 'verifyEmail']);
 
 Route::middleware(['auth:sanctum'])->group(function () {
-
     Route::prefix('user')->group(function () {
         Route::get('/', [UserController::class, 'users']);
         Route::get('auth', [UserController::class, 'auth']);
@@ -17,8 +17,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::put('profile', [UserController::class, 'updateProfile']);
         Route::post('avatar', [UserController::class, 'updateAvatar']);
         Route::post('/send-verify/email', [VerificationController::class, 'sendVerificationEmail']);
-        Route::post('/verify/email', [VerificationController::class, 'verifyEmail']);
-
     });
 
     Route::prefix('notifications')->group(function () {
