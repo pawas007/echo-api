@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\NotificationsController;
+use App\Http\Controllers\UserSettingController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\FriendController;
@@ -16,9 +17,11 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::put('update/password', [UserController::class, 'updatePassword']);
         Route::put('profile', [UserController::class, 'updateProfile']);
         Route::post('avatar', [UserController::class, 'updateAvatar']);
-        Route::post('/send-verify/email', [VerificationController::class, 'sendVerificationEmail']);
-        Route::post('/send-verify/phone', [VerificationController::class, 'sendVerificationPhone']);
-        Route::post('/verify/phone', [VerificationController::class, 'verifyPhone']);
+        Route::post('send-verify/email', [VerificationController::class, 'sendVerificationEmail']);
+        Route::post('send-verify/phone', [VerificationController::class, 'sendVerificationPhone']);
+        Route::post('verify/phone', [VerificationController::class, 'verifyPhone']);
+        Route::post('settings', [UserSettingController::class, 'updateSettings']);
+
     });
 
     Route::prefix('notifications')->group(function () {

@@ -4,6 +4,7 @@ namespace App\Repositories\User;
 
 use App\Http\Resources\UserCollection;
 use App\Models\User;
+use App\Models\UserSetting;
 use Exception;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Http\JsonResponse;
@@ -32,6 +33,8 @@ class UserRepository implements UserRepositoryInterface
     {
         $user = Auth::user();
         $user->profile;
+        $settings = UserSetting::where('user_id', $user->id)->first();
+        $user['settings'] = $settings;
         return $user;
     }
 
@@ -122,11 +125,11 @@ class UserRepository implements UserRepositoryInterface
         if ($this->request->hasFile('avatar')) {
             $userAvatarFile = $this->request->file('avatar');
             $authUser = Auth::user();
-            $avatarName = strtolower($authUser->name . time() . '-avatar.' . $userAvatarFile->getClientOriginalExtension());
+            $avatarName = strtolower($authUser->name.time().'-avatar.'.$userAvatarFile->getClientOriginalExtension());
             $storageFolder = 'images/avatars/';
-            $path = env('APP_URL') . '/storage/images/avatars/' . $avatarName;
+            $path = env('APP_URL').'/storage/images/avatars/'.$avatarName;
             $authUser->profile()->update(['avatar' => $path]);
-            Storage::disk('public')->put($storageFolder . $avatarName, $userAvatarFile->getContent());
+            Storage::disk('public')->put($storageFolder.$avatarName, $userAvatarFile->getContent());
 
             return response()->json();
         }

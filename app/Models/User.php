@@ -126,6 +126,9 @@ class User extends Authenticatable
         $this->friendPendingRequest()->detach($user->id);
     }
 
+    /**
+     * @return array
+     */
     public function friendCounts(): array
     {
         return [
@@ -135,29 +138,45 @@ class User extends Authenticatable
         ];
     }
 
+    /**
+     * @return string
+     */
     public function receivesBroadcastNotificationsOn(): string
     {
         return 'push_notify.' . $this->id;
     }
 
-//    public function settings(): HasOne
-//    {
-//        return $this->hasOne(UserSetting::class, 'user_id', 'id');
-//    }
-
-    public function sendResetPasswordEmail($token)
+    /**
+     * @param $token
+     * @return void
+     */
+    public function sendResetPasswordEmail($token): void
     {
         Notification::send($this, new ForgotPasswordNotification($token));
     }
 
-    public function sendVerificationEmail()
+    /**
+     * @return void
+     */
+    public function sendVerificationEmail(): void
     {
         Notification::send($this, new VerifyEmailNotification());
     }
 
+    /**
+     * @return HasOne
+     */
     public function profile(): HasOne
     {
         return $this->hasOne(Profile::class);
+    }
+
+    /**
+     * @return HasOne
+     */
+    public function settings()
+    {
+        return 'ds';
     }
 
 }

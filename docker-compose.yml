@@ -57,16 +57,15 @@ services:
         networks:
             - echo-api
     mongo:
-        image: mongo:3.4
+        image: mongo
         container_name: echo_mongo
-        volumes:
-            - './docker/mongo/:/data/db'
         environment:
-            - MONGO_INITDB_DATABASE=${DB_MONGO_DATABASE}
-            - MONGO_INITDB_ROOT_USERNAME=${DB_MONGO_USERNAME}
-            - MONGO_INITDB_ROOT_PASSWORD=${DB_MONGO_PASSWORD}
+            - DB_MONGO_USERNAME=${DB_MONGO_USERNAME}
+            - DB_MONGO_PASSWORD=${DB_MONGO_PASSWORD}
         ports:
-            - "27017:27017"
+            -   "27017:27017"
+        networks:
+            - echo-api
 
     phpmyadmin:
         image: phpmyadmin/phpmyadmin
