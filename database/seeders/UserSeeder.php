@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Profile;
 use App\Models\User;
+use App\Models\UserSetting;
 use Illuminate\Database\Seeder;
 
 class UserSeeder extends Seeder
@@ -20,6 +21,15 @@ class UserSeeder extends Seeder
                     'avatar' => null,
                 ]
             );
+            UserSetting::create([
+                'user_id' => $user['id'],
+                    'notifications' => [
+                        'email' => true,
+                        'sound' => true,
+                        'push' => true,
+                    ]
+
+            ]);
         });
     }
 }

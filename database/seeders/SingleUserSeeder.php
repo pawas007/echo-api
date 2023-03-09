@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\User;
+use App\Models\UserSetting;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
 
@@ -18,5 +19,10 @@ class SingleUserSeeder extends Seeder
             'remember_token' => Str::random(10),
         ]);
         $user->profile()->create([]);
+        UserSetting::create(['user_id' => $user->id, 'notifications' => [
+            'email' => true,
+            'sound' => true,
+            'push' => true,
+        ]]);
     }
 }

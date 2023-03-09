@@ -62,6 +62,8 @@ services:
         environment:
             - DB_MONGO_USERNAME=${DB_MONGO_USERNAME}
             - DB_MONGO_PASSWORD=${DB_MONGO_PASSWORD}
+        volumes:
+            -  './docker/mongo/:/data/db'
         ports:
             -   "27017:27017"
         networks:
