@@ -13,5 +13,8 @@ interface UserRepositoryInterface
 
     public function updatePassword();
 
+    public function updateProfile();
+
+    public function updateAvatar();
 
 }

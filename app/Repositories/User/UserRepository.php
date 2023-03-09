@@ -82,8 +82,10 @@ class UserRepository implements UserRepositoryInterface
         DB::beginTransaction();
         try {
             $this->request->validate([
-                'name' => 'required'
+                'name' => 'required',
+                'phone'=> 'string|min:12|nullable|unique:users',
             ]);
+            $user->phone = $this->request->phone;
             $user->name = $this->request->name;
             $user->profile()->update([
                 "age" => $this->request->profile['age'],
