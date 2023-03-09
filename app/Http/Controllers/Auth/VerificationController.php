@@ -62,15 +62,20 @@ class VerificationController extends Controller
         }
     }
 
+    /**
+     * @param SmsNotificatorInterface $smsNotificator
+     * @return JsonResponse
+     */
     public function sendVerificationPhone(SmsNotificatorInterface $smsNotificator)
     {
         $user = Auth::user();
         if ($user->phone_verified_at) {
             return response()->json(['message' => 'Already verified']);
         }
-        function randomNumber($length) {
+        function randomNumber($length)
+        {
             $result = '';
-            for($i = 0; $i < $length; $i++) {
+            for ($i = 0; $i < $length; $i++) {
                 $result .= mt_rand(0, 9);
             }
             return $result;
@@ -82,16 +87,45 @@ class VerificationController extends Controller
 
         try {
             DB::beginTransaction();
-            $smsNotificator->sendVerifyCode($user->phone, $code);
-            $phoneVerifyTable->insert(['code' =>  $code, 'user_id' => $user->id]);
+            $smsNotificator->sendVerifyCode($user->phone, 'Verify code: ' . $code);
+            $phoneVerifyTable->insert(['code' => $code, 'user_id' => $user->id]);
             DB::commit();
             return response()->json(['message' => 'Message with code send']);
         } catch (Exception $exception) {
             DB::rollBack();
-            if ((int) $exception->getCode() === 21211){
-                return response()->json(['message'=>'Wrong phone number. Or try add country code without + symbol'], 500);
+            if ((int)$exception->getCode() === 21211) {
+                return response()->json(['message' => 'Wrong phone number. Or try add country code without + symbol'], 500);
             }
-             return response()->json(['message'=> $exception->getMessage()], 500);
+            return response()->json(['message' => $exception->getMessage()], 500);
         }
     }
+
+
+    /**
+     * @param Request $request
+     * @return Exception|JsonResponse
+     */
+    public function verifyPhone(Request $request)
+    {
+        try {
+            $user = Auth::user();
+            if ($user->phone_verified_at) {
+                return response()->json(['message' => 'Already verified']);
+            }
+            DB::beginTransaction();
+            $phoneVerifiedCodeTable = DB::table('users_phone_verify')->where('user_id', $user->id);
+            if ($phoneVerifiedCodeTable->first()->code == $request->code) {
+                $user->phone_verified_at = now();
+                $user->save();
+                $phoneVerifiedCodeTable->delete();
+                DB::commit();
+                return response()->json(['message' => 'Verified'], 200);
+            }
+            return response()->json(['message' => 'Invalid code, try again'], 404);
+        } catch (Exception $exception) {
+            DB::rollBack();
+            return $exception;
+        }
+    }
+
 }

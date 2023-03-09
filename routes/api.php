@@ -18,6 +18,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::post('avatar', [UserController::class, 'updateAvatar']);
         Route::post('/send-verify/email', [VerificationController::class, 'sendVerificationEmail']);
         Route::post('/send-verify/phone', [VerificationController::class, 'sendVerificationPhone']);
+        Route::post('/verify/phone', [VerificationController::class, 'verifyPhone']);
     });
 
     Route::prefix('notifications')->group(function () {
