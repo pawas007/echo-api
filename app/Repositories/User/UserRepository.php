@@ -13,6 +13,7 @@ use App\Rules\MatchOldPasswordRule;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 
 class UserRepository implements UserRepositoryInterface
 {
@@ -83,7 +84,13 @@ class UserRepository implements UserRepositoryInterface
         try {
             $this->request->validate([
                 'name' => 'required',
-                'phone'=> 'string|min:12|nullable|unique:users',
+                'phone' => [
+                    'string',
+                    'min:9',
+                    'nullable',
+                    Rule::unique('users')->ignore($user->id)
+                ]
+
             ]);
             $user->phone = $this->request->phone;
             $user->name = $this->request->name;
@@ -115,9 +122,9 @@ class UserRepository implements UserRepositoryInterface
         if ($this->request->hasFile('avatar')) {
             $userAvatarFile = $this->request->file('avatar');
             $authUser = Auth::user();
-            $avatarName = strtolower($authUser->name .time().'-avatar.'. $userAvatarFile->getClientOriginalExtension());
+            $avatarName = strtolower($authUser->name . time() . '-avatar.' . $userAvatarFile->getClientOriginalExtension());
             $storageFolder = 'images/avatars/';
-            $path = env('APP_URL') . '/storage/images/avatars/' . $avatarName ;
+            $path = env('APP_URL') . '/storage/images/avatars/' . $avatarName;
             $authUser->profile()->update(['avatar' => $path]);
             Storage::disk('public')->put($storageFolder . $avatarName, $userAvatarFile->getContent());
 
