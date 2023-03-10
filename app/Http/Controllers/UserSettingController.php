@@ -18,10 +18,12 @@ class UserSettingController extends Controller
      */
     public function updateSettings(Request $request): JsonResponse
     {
+        $user_id = Auth::user()->id;
         UserSetting::updateOrCreate(
             ['user_id' => Auth::user()->id,],
             ['notifications' => $request->settings['notifications']]
         );
-        return response()->json([]);
+       $settings =  UserSetting::where('user_id',$user_id)->first();
+        return response()->json($settings);
     }
 }
