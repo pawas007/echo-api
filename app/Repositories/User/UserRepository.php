@@ -130,7 +130,6 @@ class UserRepository implements UserRepositoryInterface
             $path = env('APP_URL').'/storage/images/avatars/'.$avatarName;
             $authUser->profile()->update(['avatar' => $path]);
             Storage::disk('public')->put($storageFolder.$avatarName, $userAvatarFile->getContent());
-
             return response()->json();
         }
 
