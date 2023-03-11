@@ -16,6 +16,7 @@ return new class extends Migration {
             $table->id();
             $table->foreignId('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreignId('friend_id')->references('id')->on('users')->onDelete('cascade');
+            $table->string('status');
             $table->timestamps();
         });
     }

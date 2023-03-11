@@ -19,7 +19,6 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
-
     /**
      * The attributes that are mass assignable.
      *
@@ -54,13 +53,14 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-
     /**
      * @return BelongsToMany
      */
     public function friends(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, 'friends', 'user_id', 'friend_id')->withTimestamps();
+        return $this->belongsToMany(User::class, 'friends', 'user_id', 'friend_id')
+            ->wherePivot('status', Friend::STATUS_ACCEPTED)
+            ->withTimestamps();
     }
 
     /**
@@ -68,7 +68,9 @@ class User extends Authenticatable
      */
     public function friendPendingRequest(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, 'friend_pendings', 'user_id', 'friend_id')->withTimestamps();
+        return $this->belongsToMany(User::class, 'friends', 'user_id', 'friend_id')
+            ->wherePivot('status', Friend::STATUS_PENDING)
+            ->withTimestamps();
     }
 
     /**
@@ -76,66 +78,9 @@ class User extends Authenticatable
      */
     public function friendRequest(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, 'friend_pendings', 'friend_id', 'user_id')->withTimestamps();
-    }
-
-    /**
-     * @param $user
-     * @return void
-     */
-    public function friendAdd($user): void
-    {
-        $this->friendPendingRequest()->attach($user->id);
-    }
-
-    /**
-     * @param $user
-     * @return void
-     */
-    public function friendDelete($user): void
-    {
-        $this->friends()->detach($user->id);
-
-    }
-
-    /**
-     * @param $user
-     * @return void
-     */
-    public function friendAccept($user): void
-    {
-        $this->friendRequest()->detach($user->id);
-        $this->friends()->attach($user->id);
-    }
-
-    /**
-     * @param $user
-     * @return void
-     */
-    public function friendDecline($user): void
-    {
-        $this->friendRequest()->detach($user->id);
-    }
-
-    /**
-     * @param User $user
-     * @return void
-     */
-    public function pendingCancel(User $user): void
-    {
-        $this->friendPendingRequest()->detach($user->id);
-    }
-
-    /**
-     * @return array
-     */
-    public function friendCounts(): array
-    {
-        return [
-            'friends' => $this->friends()->count(),
-            'pending' => $this->friendPendingRequest()->count(),
-            'request' => $this->friendRequest()->count(),
-        ];
+        return $this->belongsToMany(User::class, 'friends', 'friend_id', 'user_id')
+            ->wherePivot('status', Friend::STATUS_PENDING)
+            ->withTimestamps();
     }
 
     /**
@@ -170,13 +115,4 @@ class User extends Authenticatable
     {
         return $this->hasOne(Profile::class);
     }
-
-    /**
-     * @return HasOne
-     */
-    public function settings()
-    {
-        return 'ds';
-    }
-
 }
