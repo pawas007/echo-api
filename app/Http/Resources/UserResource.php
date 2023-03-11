@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Friend;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Auth;
@@ -19,11 +20,11 @@ class UserResource extends JsonResource
         $authUser = Auth::user();
         $pending = collect($authUser->friendPendingRequest)->pluck('id')->contains($this->id);
         if ($pending) {
-            return 'pending';
+            return Friend::STATUS_PENDING;
         }
         $friend = collect($authUser->friends)->pluck('id')->contains($this->id);
         if ($friend) {
-            return 'friend';
+            return Friend::STATUS_ACCEPTED;
         }
         return false;
     }

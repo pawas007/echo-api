@@ -11,6 +11,5 @@ class Friend extends Model
 
     const STATUS_ACCEPTED = 'accepted';
 
-    const STATUS_REJECTED = 'rejected';
 
 }
