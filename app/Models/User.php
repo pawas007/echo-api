@@ -2,15 +2,17 @@
 
 namespace App\Models;
 
+use App\Notifications\ForgotPasswordNotification;
 use App\Notifications\VerifyEmailNotification;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Notification;
-use App\Notifications\ForgotPasswordNotification;
+use Laravel\Sanctum\HasApiTokens;
 
 /**
  * @method where
@@ -30,7 +32,6 @@ class User extends Authenticatable
         'email',
         'password',
         'last_seen',
-
     ];
 
     /**
@@ -51,7 +52,13 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'isOnline' => 'boolean',
     ];
+
+    /**
+     * @var string[]
+     */
+    protected $appends = ['if_online'];
 
     /**
      * @return BelongsToMany
@@ -88,7 +95,7 @@ class User extends Authenticatable
      */
     public function receivesBroadcastNotificationsOn(): string
     {
-        return 'push_notify.' . $this->id;
+        return 'push_notify.'.$this->id;
     }
 
     /**
@@ -114,5 +121,16 @@ class User extends Authenticatable
     public function profile(): HasOne
     {
         return $this->hasOne(Profile::class);
+    }
+
+
+    /**
+     * @return Attribute
+     */
+    protected function ifOnline(): Attribute
+    {
+        return Attribute::make(
+            get: fn() => (bool)Cache::get('user-is-online-'.$this->id)
+        );
     }
 }

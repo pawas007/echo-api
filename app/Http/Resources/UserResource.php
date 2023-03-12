@@ -10,6 +10,7 @@ use JsonSerializable;
 
 class UserResource extends JsonResource
 {
+
     /**
      * Transform the resource into an array.
      *
@@ -36,7 +37,8 @@ class UserResource extends JsonResource
             'name' => $this->name,
             'email' => $this->email,
             'status' => $this->getStatus(),
-            'profile' => $this->profile
+            'profile' => $this->profile,
+            'if_online' => $this->if_online,
         ];
     }
 }
