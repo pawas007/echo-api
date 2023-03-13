@@ -2,13 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\UserCollection;
 use App\Models\User;
 use App\Repositories\User\UserRepositoryInterface;
 use Exception;
 use Illuminate\Contracts\Auth\Authenticatable;
-use App\Http\Resources\UserCollection;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
@@ -60,6 +59,7 @@ class UserController extends Controller
     {
         return $this->userRepository->updateProfile();
     }
+
     /**
      * @return JsonResponse
      */
@@ -67,4 +67,13 @@ class UserController extends Controller
     {
         return $this->userRepository->updateAvatar();
     }
+
+    /**
+     * @return JsonResponse
+     */
+    public function updatePoster()
+    {
+        return $this->userRepository->updatePoster();
+    }
+
 }

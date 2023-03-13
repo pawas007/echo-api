@@ -1,11 +1,11 @@
 <?php
 
 use App\Http\Controllers\Auth\VerificationController;
+use App\Http\Controllers\FriendController;
 use App\Http\Controllers\NotificationsController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserSettingController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\FriendController;
 
 Route::post('/verify/email', [VerificationController::class, 'verifyEmail']);
 
@@ -16,12 +16,12 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::put('update/email', [UserController::class, 'updateEmail']);
         Route::put('update/password', [UserController::class, 'updatePassword']);
         Route::put('profile', [UserController::class, 'updateProfile']);
-        Route::post('avatar', [UserController::class, 'updateAvatar']);
+        Route::post('update/avatar', [UserController::class, 'updateAvatar']);
+        Route::post('update/poster', [UserController::class, 'updatePoster']);
         Route::post('send-verify/email', [VerificationController::class, 'sendVerificationEmail']);
         Route::post('send-verify/phone', [VerificationController::class, 'sendVerificationPhone']);
         Route::post('verify/phone', [VerificationController::class, 'verifyPhone']);
         Route::post('settings', [UserSettingController::class, 'updateSettings']);
-
     });
 
     Route::prefix('notifications')->group(function () {
@@ -41,7 +41,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::delete('{user}/delete', [FriendController::class, 'friendDelete']);
         Route::get('counts', [FriendController::class, 'friendCounts']);
     });
-
 });
 
 
