@@ -12,8 +12,13 @@ return new class extends Migration {
             $table->foreignId('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->string('country')->nullable();
             $table->string('age')->nullable();
+            $table->string('address')->nullable();
             $table->string('sex')->nullable();
             $table->string('avatar')->nullable();
+            $table->string('poster')->nullable();
+            $table->text('about')->nullable();
+            $table->text('quote')->nullable();
+            $table->timestamp('birthday')->nullable();
             $table->timestamps();
         });
     }

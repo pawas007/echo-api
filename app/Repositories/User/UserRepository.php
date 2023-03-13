@@ -5,12 +5,12 @@ namespace App\Repositories\User;
 use App\Http\Resources\UserCollection;
 use App\Models\User;
 use App\Models\UserSetting;
+use App\Rules\MatchOldPasswordRule;
 use Exception;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Rules\MatchOldPasswordRule;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
@@ -97,11 +97,7 @@ class UserRepository implements UserRepositoryInterface
             ]);
             $user->phone = $this->request->phone;
             $user->name = $this->request->name;
-            $user->profile()->update([
-                "age" => $this->request->profile['age'],
-                "country" => $this->request->profile['country'],
-                "sex" => $this->request->profile['sex']
-            ]);
+            $user->profile()->update($this->request->profile);
             $user->save();
             $user->profile;
             DB::commit();
