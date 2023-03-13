@@ -16,5 +16,8 @@ interface UserRepositoryInterface
     public function updateProfile();
 
     public function updateAvatar();
+    
+    public function updatePoster();
+
 
 }
