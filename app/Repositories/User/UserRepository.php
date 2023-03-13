@@ -135,16 +135,16 @@ class UserRepository implements UserRepositoryInterface
     public function updatePoster(): JsonResponse
     {
         $this->request->validate([
-            'avatar' => 'required|image|mimes:png,jpg,jpeg'
+            'poster' => 'required|image|mimes:png,jpg,jpeg'
         ]);
 
-        if ($this->request->hasFile('avatar')) {
+        if ($this->request->hasFile('poster')) {
             $userPosterFile = $this->request->file('poster');
             $authUser = Auth::user();
             $posterName = strtolower($authUser->name.time().'-avatar.'.$userPosterFile->getClientOriginalExtension());
             $storageFolder = 'images/posters/';
             $path = env('APP_URL').'/storage/images/posters/'.$posterName;
-            $authUser->profile()->update(['avatar' => $path]);
+            $authUser->profile()->update(['poster' => $path]);
             Storage::disk('public')->put($storageFolder.$posterName, $userPosterFile->getContent());
             return response()->json();
         }
