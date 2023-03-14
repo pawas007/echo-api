@@ -18,12 +18,13 @@ class UserSeeder extends Seeder
             Profile::create(
                 [
                     'user_id' => $user['id'],
-                    'country' => $faker->country,
-                    'age' => rand(10, 109),
                     'sex' => 'Male',
                     'avatar' => null,
                     'poster' => null,
-                    'address' => $faker->address,
+                    'country' => $faker->country,
+                    'region' => $faker->city,
+                    'city' => $faker->city,
+                    'locality' => $faker->city,
                     'about' => $faker->text(200),
                     'quote' => $faker->text(30),
                     'birthday' => $faker->dateTime

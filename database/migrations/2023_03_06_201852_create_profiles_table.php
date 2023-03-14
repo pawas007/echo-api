@@ -10,14 +10,16 @@ return new class extends Migration {
         Schema::create('profiles', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->string('country')->nullable();
-            $table->string('age')->nullable();
-            $table->string('address')->nullable();
+
             $table->string('sex')->nullable();
             $table->string('avatar')->nullable();
             $table->string('poster')->nullable();
             $table->text('about')->nullable();
             $table->text('quote')->nullable();
+            $table->string('country')->nullable();
+            $table->string('region')->nullable();
+            $table->string('city')->nullable();
+            $table->string('locality')->nullable();
             $table->timestamp('birthday')->nullable();
             $table->timestamps();
         });

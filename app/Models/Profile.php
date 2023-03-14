@@ -6,17 +6,16 @@ use Illuminate\Database\Eloquent\Model;
 
 class Profile extends Model
 {
-    const sex = ['Male', 'Female'];
-
     protected $fillable =
         [
             'country',
-            'age',
             'sex',
             'avatar',
             'avatar_url',
             'user_id',
-            'address',
+            'region',
+            'city',
+            'locality',
             'poster',
             'about',
             'quote',

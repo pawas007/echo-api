@@ -23,9 +23,10 @@ class SingleUserSeeder extends Seeder
         ]);
         $user->profile()->create([
             'country' => $faker->country,
-            'age' => rand(10, 109),
             'poster' => null,
-            'address' => $faker->address,
+            'region' => $faker->city,
+            'city' => $faker->city,
+            'locality' => $faker->city,
             'sex' => 'Male',
             'about' => $faker->text(20),
             'quote' => $faker->text(5),
